@@ -7,7 +7,7 @@ module.exports = {
 
   // MongoDB connection options
   mongo: {
-    uri: 'mongodb://localhost/paizaqa-dev'
+    uri: 'mongodb://PC93:27017'
   },
 
   // Seed database on startup
