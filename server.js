@@ -75,6 +75,41 @@ app.post('/insertUser/', function (req, res) {
     // @TODO
 });
 
+
+app.get('/getQuestions/', function (req, res) {
+    
+    var question = {
+        userName: req.session.currentUser,
+        question: req.body.password,
+        profileName: req.body.profileName
+    };
+
+    // @TODO
+});
+
+app.post('/insertQuestion/', function (req, res) {
+    var question = {
+        userName: req.session.currentUser,
+        title: req.body.title,
+        content:req.body.content,
+        dateTime:Date.now()
+    };
+    db.insertQuestion(question, (err, results) => {
+        if (err) {
+            console.log("something is wrong");
+            res.send("no user is found");
+        } else {
+        req.session.currentUser = {
+            userName: login.userName
+        };
+            console.log("user found");
+            res.send("user found");
+    }
+
+    // @TODO
+    });
+});
+
 app.get('/', checkAuth, function (req, res) {
     res.sendFile(__dirname + '/index.html');
 });

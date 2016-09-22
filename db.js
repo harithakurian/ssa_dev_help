@@ -1,5 +1,6 @@
 module.exports = function (db) {
     var usersCollection = db.collection('users');
+    var questionsCollection = db.collection('questions');
 
     /*
      * args: user object (or array of user objects)
@@ -35,14 +36,12 @@ module.exports = function (db) {
      * return: callback(err, isSuccess)
      */
     this.insertQuestion = function (question, callback) {
-        var questionsCollection = db.collection('questions');
-
         questionsCollection.insert(question, function (err, result) {
             if (err) {
                 callback(err, false);
             } else {
-                console.log('Inserted documents with Questions:', result);
-                callback(null, true);
+                console.log('Inserted documents with Questions:');
+                callback(question, true);
             }
         });
     }
@@ -52,8 +51,7 @@ module.exports = function (db) {
      * return: callback(err, results)
      */
     this.findQuestions = function (filter, callback) {
-        var collection = db.collection('questions');
-        collection.find(filter).toArray(function (err, docs) {
+        questionsCollection.find(filter).toArray(function (err, docs) {
             if (err) {
                 callback(err, null);
             } else {

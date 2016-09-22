@@ -8,6 +8,8 @@ app.config(function($routeProvider) {
         templateUrl : "static/Templates/friends.html"
     }).when("/", {
         templateUrl: "static/Templates/feed.html"
+    }).when("/insertQuestion/", {
+        templateUrl: "static/Templates/insertQuestion.html"
     }).otherwise({
         templateUrl: 'static/Templates/feed.html'
     });
@@ -34,3 +36,20 @@ app.controller('NavController', function ($scope, $location)
     };
 });
 
+app.controller('FeedController', function ($scope, $location) 
+{ 
+$http.get("/getQuestions/", {cache: false}).success(function(response) {
+            // location = location.origin + "/";
+            //console.log($scope.userName);
+            $scope.questions = response.data;
+         });     
+});
+
+app.controller('insertQuestionController', function ($scope, $location) 
+{ 
+$http.post("/insertQuestion/").success(function(response) {
+            // location = location.origin + "/";
+            //console.log($scope.userName);
+            $scope.question = response.data;
+         });      
+});
