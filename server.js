@@ -48,15 +48,16 @@ app.post('/login/', function (req, res) {
 
     console.log('login UserName is: ' + login.userName);
     console.log('password is: ' + login.password);
+    console.dir(login);
 
     db.findUsers(login, (err, results) => {
         if (err || results.length !== 1) {
             console.log("something is wrong");
             res.send("no user is found");
         } else {
-        req.session.currentUser = {
-            userName: login.userName
-        };
+            req.session.currentUser = {
+                userName: login.userName
+            };
             console.log("user found");
             res.send("user found");
 
@@ -72,13 +73,45 @@ app.post('/insertUser/', function (req, res) {
         profileName: req.body.profileName
     };
 
-    // @TODO
+    db.insertUser(user, (err, success) => {
+        if (err) {
+            res.status(500).send(err);
+        } else {
+            req.session.currentUser = {
+                userName: user.userName
+            };
+            res.redirect("/");
+        }
+    });
+});
+
+app.post("/insertAnswer", function (req, res) {
+    var answer = {
+        userName: req.session.userName, 
+        questionId: req.body.questionId, 
+        content: req.body.content,
+        dateTime: new Date()
+    };
+
+    db.insertAnswer(answer, (err,result)=> {
+        if(err){
+            console.log("Answer not inserted", err);
+        }
+        else
+        {
+            console.log("Answer inserted successfully", result);
+            res.send(result);
+        }
+    })
 });
 
 app.get('/', checkAuth, function (req, res) {
     res.sendFile(__dirname + '/index.html');
 });
 
+app.get('/register', function (req, res) {
+    res.sendFile(__dirname + '/register.html');
+});
 
 // Initialize connection once
 MongoClient.connect("mongodb://PC93:27017/ssa-dev-help-db", function (err, database) {
