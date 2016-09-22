@@ -66,6 +66,11 @@ app.post('/login/', function (req, res) {
     });
 });
 
+app.post('/logout/', function (req, res) {
+    req.session.currentUser = null;
+    res.redirect(200, "/");
+});
+
 app.post('/insertUser/', function (req, res) {
     var user = {
         userName: req.body.userName,
@@ -85,7 +90,7 @@ app.post('/insertUser/', function (req, res) {
     });
 });
 
-app.post("/insertAnswer", function (req, res) {
+app.post("/insertAnswer/", function (req, res) {
     var answer = {
         userName: req.session.userName, 
         questionId: req.body.questionId, 
@@ -105,7 +110,7 @@ app.post("/insertAnswer", function (req, res) {
     })
 });
 
-app.post('/insertComment', function (req, res) {
+app.post('/insertComment/', function (req, res) {
     var comment = {
         userName: req.session.userName,
         questionId: req.body.questionId, 
