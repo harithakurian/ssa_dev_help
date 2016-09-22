@@ -62,7 +62,7 @@ app.post('/insertUser/', function (req, res) {
     // @TODO
 });
 
-app.get('/', checkAuth, function (req, res) {
+app.get('/', function (req, res) {
     res.sendFile(__dirname + '/index.html');
 });
 
