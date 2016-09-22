@@ -49,7 +49,20 @@ app.post('/login/', function (req, res) {
     console.log('login UserName is: ' + login.userName);
     console.log('password is: ' + login.password);
 
-    // @TODO
+    db.findUsers(login, (err, results) => {
+        if (err || results.length !== 1) {
+            console.log("something is wrong");
+            res.send("no user is found");
+        } else {
+        req.session.currentUser = {
+            userName: login.userName
+        };
+            console.log("user found");
+            res.send("user found");
+
+            // @TODO set session
+        }
+    });
 });
 
 app.post('/insertUser/', function (req, res) {
@@ -62,7 +75,7 @@ app.post('/insertUser/', function (req, res) {
     // @TODO
 });
 
-app.get('/', function (req, res) {
+app.get('/', checkAuth, function (req, res) {
     res.sendFile(__dirname + '/index.html');
 });
 
