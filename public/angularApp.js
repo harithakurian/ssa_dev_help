@@ -44,7 +44,11 @@ app.controller('NavController', function ($scope, $location, $http) {
         return viewLocation === $location.path();
     };
     $scope.logout = function (){
-        $http.post("/logout/");
+        $http.post("/logout/").then(function (response){
+            window.location = "/";
+        }, function (erro){
+            console.log(error);
+        });
     }
 });
 

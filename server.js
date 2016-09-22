@@ -67,8 +67,11 @@ app.post('/login/', function (req, res) {
 });
 
 app.post('/logout/', function (req, res) {
-    req.session.currentUser = null;
-    res.redirect(200, "/");
+    req.session.destroy(function(err) {
+
+        res.redirect("/");
+    });
+
 });
 
 app.post('/insertUser/', function (req, res) {
