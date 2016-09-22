@@ -1,6 +1,7 @@
 module.exports = function (db) {
     var usersCollection = db.collection('users');
     var answersCollection = db.collection('answers');
+    var commentsCollection = db.collection('comments');
 
     /*
      * args: user object (or array of user objects)
@@ -42,6 +43,18 @@ module.exports = function (db) {
                 console.log("Inserted answer :", result);
                 callback(null, result);
             }
+        })
+    } 
+
+    this.insertComment = function(comment){
+        return new Promise(function(resolve, reject){
+            commentsCollection.insert(comment, function(err,row){
+                if(err){
+                    reject(err);
+                    return;
+                }
+                resolve(row);
+            })
         })
     } 
     /*
