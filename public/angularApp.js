@@ -8,8 +8,10 @@ app.config(function ($routeProvider) {
         templateUrl: "static/Templates/friends.html"
     }).when("/", {
         templateUrl: "static/Templates/feed.html"
-    }).when("/insertQuestion/", {
+    }).when("/InsertQuestion/", {
         templateUrl: "static/Templates/insertQuestion.html"
+    }).when("/view-question/:questionId", {
+        templateUrl: "static/Templates/view-question.html"
     }).otherwise({
         templateUrl: 'static/Templates/feed.html'
     });
@@ -47,20 +49,29 @@ app.controller('NavController', function ($scope, $location) {
     };
 });
 
-app.controller('FeedController', function ($scope, $location) 
+app.controller('getQuestionsController', function ($scope, $http) 
 { 
-$http.get("/getQuestions/", {cache: false}).success(function(response) {
+$http.get("/getQuestions/", {cache: false}).then(function(response) {
             // location = location.origin + "/";
             //console.log($scope.userName);
             $scope.questions = response.data;
+            console.log(response.data);
          });     
 });
 
-app.controller('insertQuestionController', function ($scope, $location) 
+app.controller('insertQuestionController', function ($scope, $http) 
 { 
-$http.post("/insertQuestion/").success(function(response) {
-            // location = location.origin + "/";
-            //console.log($scope.userName);
-            $scope.question = response.data;
-         });      
+    $scope.required = true;
+    $scope.insertQuestion = function () {
+    var question = {
+        title: $scope.title,
+        content:$scope.content
+    };
+    $http.post("/insertQuestion/", question).then(function (response) {
+            window.location = "/#/";
+        }, function (error) {
+            console.log(error);
+            alert(error.data.errmsg);
+        });
+    }      
 });

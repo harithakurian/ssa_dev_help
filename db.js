@@ -54,8 +54,8 @@ module.exports = function (db) {
             if (err) {
                 callback(err, false);
             } else {
-                console.log('Inserted documents with Questions:');
-                callback(question, true);
+                console.log('Inserted Questions with:', result);
+                callback(null, true);
             }
         });
     }
