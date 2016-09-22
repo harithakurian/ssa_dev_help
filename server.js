@@ -112,7 +112,6 @@ app.post("/insertAnswer/", function (req, res) {
         }
     })
 });
-
 app.post('/insertComment/', function (req, res) {
     var comment = {
         userName: req.session.userName,
@@ -132,7 +131,44 @@ app.post('/insertComment/', function (req, res) {
         }
     )    
 })
+app.get('/api/view-question/:questionId', function (req, res) {
+    // @TODO: take question and query for question with id
+});
 
+app.get('/getQuestions/', function (req, res) {
+    var filter = {
+        userName: req.session.currentUser.userName
+    };
+    db.findQuestions(filter, function(err, results) {
+        if (err) {
+            res.status(500).send(err);
+        } else {
+            console.log(results);
+            res.json(results);
+        }
+    })
+
+    // @TODO
+});
+
+app.post('/insertQuestion/', function (req, res) {
+    var question = {
+        userName: req.session.currentUser.userName,
+        title: req.body.title,
+        content:req.body.content,
+        dateTime: new Date()
+    };
+
+    console.dir(question);
+    db.insertQuestion(question, (err, success) => {
+        if (err) {
+            res.status(500).send(err);
+        } else {
+            res.send("success");
+    }
+    // @TODO
+    });
+});
 app.get('/', checkAuth, function (req, res) {
     res.sendFile(__dirname + '/index.html');
 });
