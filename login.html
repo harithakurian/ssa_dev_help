@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html ng-app="ssadevhelp">
+
+<head>
+    <title>SSA Developer Help</title>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.8/angular.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.8/angular-route.js"></script>
+    <script src="/static/angularApp.js"></script>
+</head>
+
+<body ng-controller="SSADevHelpCtrl">
+    <form ng-submit="getPictures()">
+       User: <input type="text" ng-model="userName">
+       <br/><br/>
+       Password: <input type="password" ng-model="password">
+       <br/><br/>
+       <input type="submit" value="Login">
+       <br/><br/>
+</form>
+
+</body>
+</html>
