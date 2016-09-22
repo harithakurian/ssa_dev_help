@@ -75,6 +75,26 @@ app.post('/insertUser/', function (req, res) {
     // @TODO
 });
 
+app.post("/insertAnswer", function (req, res) {
+    var answer = {
+        userName: req.session.userName, 
+        questionId: req.body.questionId, 
+        content: req.body.content,
+        dateTime: new Date()
+    };
+
+    db.insertAnswer(answer, (err,result)=> {
+        if(err){
+            console.log("Answer not inserted", err);
+        }
+        else
+        {
+            console.log("Answer inserted successfully", result);
+            res.send(result);
+        }
+    })
+});
+
 app.get('/', checkAuth, function (req, res) {
     res.sendFile(__dirname + '/index.html');
 });

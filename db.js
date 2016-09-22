@@ -1,5 +1,6 @@
 module.exports = function (db) {
     var usersCollection = db.collection('users');
+    var answersCollection = db.collection('answers');
 
     /*
      * args: user object (or array of user objects)
@@ -30,6 +31,19 @@ module.exports = function (db) {
         });
     }
 
+    
+    this.insertAnswer = function(answer, callback){
+        answersCollection.insert(answer, function(err, result){
+            if(err){
+                callback(err,false);
+            }
+            else
+            {
+                console.log("Inserted answer :", result);
+                callback(null, result);
+            }
+        })
+    } 
     /*
      * Close database
      */
