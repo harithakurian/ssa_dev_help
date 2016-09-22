@@ -39,9 +39,12 @@ app.controller('SSADevHelpCtrl', function ($scope, $http) {
     }
 });
 
-app.controller('NavController', function ($scope, $location) {
+app.controller('NavController', function ($scope, $location, $http) {
     $scope.isActive = function (viewLocation) {
         return viewLocation === $location.path();
     };
+    $scope.logout = function (){
+        $http.post("/logout/");
+    }
 });
 
