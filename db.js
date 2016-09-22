@@ -33,6 +33,38 @@ module.exports = function (db) {
     }
 
     /*
+     * args: question object (or array of question objects)
+     * return: callback(err, isSuccess)
+     */
+    this.insertQuestion = function (question, callback) {
+        var questionsCollection = db.collection('questions');
+
+        questionsCollection.insert(question, function (err, result) {
+            if (err) {
+                callback(err, false);
+            } else {
+                console.log('Inserted documents with Questions:', result);
+                callback(null, true);
+            }
+        });
+    }
+
+    /*
+     * arg: filter
+     * return: callback(err, results)
+     */
+    this.findQuestions = function (filter, callback) {
+        var collection = db.collection('questions');
+        collection.find(filter).toArray(function (err, docs) {
+            if (err) {
+                callback(err, null);
+            } else {
+                callback(null, docs);
+            }
+        });
+    }
+
+    /*
      * Close database
      */
     this.close = function () {
