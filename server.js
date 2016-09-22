@@ -105,6 +105,26 @@ app.post("/insertAnswer", function (req, res) {
     })
 });
 
+app.post('/insertComment', function (req, res) {
+    var comment = {
+        userName: req.session.userName,
+        questionId: req.body.questionId, 
+        answerId: req.body.answerId, 
+        content: req.body.content
+    }
+
+    db.insertComment(comment).then(
+        (row) => {
+            res.send(row);
+        }
+    ).catch(
+        (err) => {
+            res.status(500);
+            res.send(err.errMsg);
+        }
+    )    
+})
+
 app.get('/', checkAuth, function (req, res) {
     res.sendFile(__dirname + '/index.html');
 });
