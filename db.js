@@ -87,6 +87,16 @@ module.exports = function (db) {
         });
     }
 
+    this.findQuestion = function (filter, callback) {
+        questionsCollection.findOne(filter)(function (err, doc) {
+            if (err) {
+                callback(err, null);
+            } else {
+                callback(null, doc);
+            }
+        });
+    }
+
     /*
      * Close database
      */
