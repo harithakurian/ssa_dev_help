@@ -33,6 +33,16 @@ module.exports = function (db) {
         });
     }
 
+    this.updateUser = function (filter, update, callback) {
+        usersCollection.updateOne(filter, { $set: update }, function (err, results) {
+            if (err) {
+                callback(err, false);
+            } else {
+                callback(null, true);
+            }
+        });
+    }
+
     
     this.insertAnswer = function(answer, callback){
         answersCollection.insert(answer, function(err, result){
