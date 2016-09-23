@@ -97,6 +97,16 @@ module.exports = function (db) {
         });
     }
 
+    this.updateQuestion = function (filter, update, callback) {
+        questionsCollection.updateOne(filter, { $set: update }, function (err, results) {
+            if (err) {
+                callback(err, false);
+            } else {
+                callback(null, true);
+            }
+        });
+    }
+
     this.findAnswers = function (filter, callback) {
         answersCollection.find(filter).toArray(function (err, docs) {
             if (err) {
