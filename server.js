@@ -132,7 +132,17 @@ app.post('/insertComment/', function (req, res) {
     )    
 })
 app.get('/api/view-question/:questionId', function (req, res) {
-    // @TODO: take question and query for question with id
+    var filter = {
+        questionId: req.params.questionId
+    };
+    db.findQuestion(filter, function(err, result) {
+        if (err) {
+            res.status(500).send(err);
+        } else {
+            console.log(results);
+            res.json(results);
+        }
+    })
 });
 
 app.get('/getQuestions/', function (req, res) {
