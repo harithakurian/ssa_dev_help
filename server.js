@@ -213,6 +213,21 @@ app.post('/insertQuestion/', function (req, res) {
     // @TODO
     });
 });
+
+app.get('/api/searchQuestions/:title', function (req, res) {
+    var filter = {
+        title: new mongo.ObjectId(req.params.title)
+    };
+    db.findQuestions(filter, function(err, results) {
+        if (err) {
+            res.status(500).send(err);
+        } else {
+            console.log(results);
+            res.json(results);
+        }
+    })
+});
+
 app.get('/', checkAuth, function (req, res) {
     res.sendFile(__dirname + '/index.html');
 });
