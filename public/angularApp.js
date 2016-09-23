@@ -4,8 +4,8 @@
 var app = angular.module("ssadevhelp", ["ngRoute"]);
 
 app.config(function ($routeProvider) {
-    $routeProvider.when("/Friends", {
-        templateUrl: "static/Templates/friends.html"
+    $routeProvider.when("/ViewAllQuestions", {
+        templateUrl: "static/Templates/viewAllQuestions.html"
     }).when("/InsertQuestion", {
         templateUrl: "static/Templates/insertQuestion.html"
     }).when("/view-question/:questionId", {
@@ -88,4 +88,12 @@ app.controller('insertQuestionController', function ($scope, $http)
             alert(error.data.errmsg);
         });
     }      
+});
+
+app.controller('viewAllQuestionsController', function ($scope, $http, $routeParams) 
+{
+    $http.get("/viewAllQuestions/", { cache: false }).then(function (response) {
+        $scope.questions = response.data;
+        console.log(response.data);
+    });     
 });

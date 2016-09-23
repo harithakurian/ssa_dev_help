@@ -1,0 +1,19 @@
+<div ng-controller="viewAllQuestionsController">
+    <div class="question" ng-repeat="question in questions">
+            <div><span class="bold">Title:</span> <a href="/#/view-question/{{question._id}}">{{question.title}}</a></div>
+            <div><span class="bold">Question:</span> {{question.content}}</div>
+            <div><span class="bold">Date:</span> {{question.dateTime}}</div>
+            <div><span class="bold">Asked by:</span> <a href="/#/user/{{question.userName}}">{{question.userName}}</a></div>
+            <br/>
+    </div>
+</div>
+
+<style type="text/css">
+    .bold {
+        font-weight: bold;
+    }
+    .question a {
+        color: blue;
+        text-decoration: underline;
+    }
+</style>

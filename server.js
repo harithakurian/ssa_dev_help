@@ -166,6 +166,21 @@ app.get('/getQuestions/:userName?', function (req, res) {
     // @TODO
 });
 
+app.get('/viewAllQuestions/', function (req, res) {
+    var filter = {};
+    
+    db.findQuestions(filter, function(err, results) {
+        if (err) {
+            res.status(500).send(err);
+        } else {
+            console.log(results);
+            res.json(results);
+        }
+    })
+
+    // @TODO
+});
+
 app.post('/insertQuestion/', function (req, res) {
     var question = {
         userName: req.session.currentUser.userName,
@@ -193,7 +208,7 @@ app.get('/register', function (req, res) {
 });
 
 // Initialize connection once
-MongoClient.connect("mongodb://localhost:27017/ssa-dev-help-db", function (err, database) {
+MongoClient.connect("mongodb://PC93:27017/ssa-dev-help-db", function (err, database) {
     if (err) {
         throw err;
     }
