@@ -94,25 +94,24 @@ app.post('/insertUser/', function (req, res) {
     });
 });
 
-app.post("/insertAnswer/", function (req, res) {
+app.post("/api/postAnswer/", function (req, res) {
     var answer = {
-        userName: req.session.userName, 
-        questionId: req.body.questionId, 
+        questionId: new mongo.ObjectId(req.body.questionId),
+        userName: req.session.currentUser.userName,
         content: req.body.content,
-        dateTime: new Date()
-    };
-
-    db.insertAnswer(answer, (err,result)=> {
-        if(err){
+        dateTime: req.body.dateTime
+    }
+    
+    db.insertAnswer(answer, (err,result) => {
+        if (err) {
             console.log("Answer not inserted", err);
-        }
-        else
-        {
-            console.log("Answer inserted successfully", result);
+            res.status(500).send(err.errmsg);
+        } else {
             res.send(result);
         }
     })
 });
+
 app.post('/insertComment/', function (req, res) {
     var comment = {
         userName: req.session.userName,
@@ -132,6 +131,7 @@ app.post('/insertComment/', function (req, res) {
         }
     )    
 })
+
 app.get('/api/getQuestion/:questionId', function (req, res) {
     var filter = {
         _id: new mongo.ObjectId(req.params.questionId)
@@ -142,7 +142,21 @@ app.get('/api/getQuestion/:questionId', function (req, res) {
         } else {                        
             res.json(result);
         }
-    })
+    });
+});
+
+app.get("/api/getAnswersByQuestion/:questionId", function (req, res) {
+    var filter = {
+        questionId: new mongo.ObjectId(req.params.questionId)
+    };
+
+    db.findAnswers(filter, function(err, results) {
+        if (err) {
+            res.status(500).send(err);
+        } else {
+            res.json(results);
+        }
+    });
 });
 
 app.get('/getQuestions/:userName?', function (req, res) {

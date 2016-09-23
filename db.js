@@ -87,6 +87,16 @@ module.exports = function (db) {
         });
     }
 
+    this.findAnswers = function (filter, callback) {
+        answersCollection.find(filter).toArray(function (err, docs) {
+            if (err) {
+                callback(err, null);
+            } else {
+                callback(null, docs);
+            }
+        });
+    }
+
     this.findQuestion = function (filter, callback) {
         console.log(filter);
         questionsCollection.findOne(filter, function (err, doc) {

@@ -73,13 +73,29 @@ app.controller('getQuestionsController', function ($scope, $http, $routeParams)
     });     
 });
 
-app.controller('getQuestionController', function ($scope, $http, $routeParams) 
+app.controller('getQuestionController', function ($scope, $http, $routeParams, $q) 
 { 
-    var id = $routeParams.questionId;
-    $http.get("/api/getQuestion/" + id, { cache: false }).then(function (response) {
-        $scope.question = response.data;
-        console.log(response.data);
-         });     
+    var questionId = $routeParams.questionId;
+
+    $scope.questionGet = $http.get("/api/getQuestion/" + questionId, { cache: false });
+    $scope.answerGet  = $http.get("/api/getAnswersByQuestion/" + questionId, { cache: false });
+
+    $q.all([$scope.questionGet, $scope.answerGet]).then(function(values) {
+        console.log(values[0].data);
+        $scope.question = values[0].data;
+        $scope.answers = values[1].data;
+    });
+
+    $scope.insertAnswer = function () {
+        var answer = {
+            questionId: $scope.question._id,
+            content: $scope.answer,
+            dateTime: new Date()
+        };
+        $http.post("/api/postAnswer/", answer).then(function (response) {
+            console.log(response);
+        });
+    }
 });
 
 app.controller('insertQuestionController', function ($scope, $http) 

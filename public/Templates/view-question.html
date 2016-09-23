@@ -1,8 +1,22 @@
 <div class="form-group" style="width: 75%; margin: auto; margin-top: 10px;" ng-controller="getQuestionController">
     <div class="question">
-            <div><span class="bold">Title:</span>{{question.title}}</div>
-            <div><span class="bold">Question:</span> {{question.content}}</div>
-            <div><span class="bold">Date:</span> {{question.dateTime}}</div>
-            <br/>
+        <div><span class="bold">Title:</span>{{question.title}}</div>
+        <div><span class="bold">Question:</span> {{question.content}}</div>
+        <div><span class="bold">Date:</span> {{question.dateTime}}</div>
+        <br/>
     </div>
+    <div style="text-align: right;" ng-repeat="answer in answers">
+        <div><span class="bold">Answer:</span> {{answer.content}}</div>
+        <div><span class="bold">Date:</span> {{answer.dateTime}}</div>
+        <div><span class="bold">By:</span> {{answer.userName}}</div>
+        <br/>
+    </div>
+    <form ng-submit="insertAnswer()">
+        <label for="answer">Answer:</label>
+        <textarea class="form-control" rows="10" id="answer" ng-required="required" ng-model="answer"></textarea>
+        <br/>
+        <center>
+            <button class="btn btn-primary btn-large"><i class="glyphicon glyphicon-lock"></i> Submit An Answer</button>
+        </center>
+    </form>
 </div>
