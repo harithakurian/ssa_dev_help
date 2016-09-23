@@ -109,6 +109,18 @@ app.controller('getQuestionController', function ($scope, $http, $routeParams, $
             alert(error.data);
         });
     }
+
+    $scope.acceptAnswer = function (questionId, answerId) {
+        var question = {
+            questionId: questionId,
+            answerId: answerId
+        };
+        $http.post("/updateQuestion/", question).then(function (response) {
+            location.reload();
+        }, function(err) {
+            alert(error.data)
+        });
+    }
 });
 
 app.controller('insertQuestionController', function ($scope, $http) 

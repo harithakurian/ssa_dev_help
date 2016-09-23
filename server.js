@@ -214,6 +214,24 @@ app.post('/insertQuestion/', function (req, res) {
     });
 });
 
+app.post('/updateQuestion/', function (req, res) {
+    var question = {
+        questionId: req.body.questionId,
+        answerId:req.body.answerId,
+    };
+
+    console.dir(question);
+    db.updateQuestion({_id: new mongo.ObjectId(questionId)}, {bestAnswerId: new mongo.ObjectId(answerId)}, 
+    function (err, isSuccess) {
+        if (err) {
+            res.status(500).send(err);
+        } else {
+            res.send("success");
+        }
+    });
+});
+
+
 app.get('/api/searchQuestions/:title', function (req, res) {
     var filter = {
         title: new mongo.ObjectId(req.params.title)
