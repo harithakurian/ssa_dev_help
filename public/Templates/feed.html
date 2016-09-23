@@ -1,11 +1,18 @@
+<br><br><br><br><br><br><div class="col-xs-3"></div><div class="col-xs-6 ">
+
 <div ng-controller="getQuestionsController">
-    <div class="question" ng-repeat="question in questions">
+    <div id="questions" class="owl-carousel">
+    <div class="question" ng-repeat="question in questions"  on-finish-render="ngRepeatFinished">
             <div><span class="bold">Title:</span> <a href="/#/view-question/{{question._id}}">{{question.title}}</a></div>
             <div><span class="bold">Question:</span> {{question.content}}</div>
             <div><span class="bold">Date:</span> {{question.dateTime}}</div>
-            <br/>
+
     </div>
+
 </div>
+</div>
+    </div>
+
 
 <style type="text/css">
     .bold {
