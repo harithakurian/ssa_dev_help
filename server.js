@@ -207,18 +207,12 @@ app.post('/insertQuestion/', function (req, res) {
 });
 
 app.post('/updateQuestion/', function (req, res) {
-    var question = {
-        questionId: req.body.questionId,
-        answerId:req.body.answerId,
-    };
-
-    console.dir(question);
-    db.updateQuestion({_id: new mongo.ObjectId(questionId)}, {bestAnswerId: new mongo.ObjectId(answerId)}, 
+    db.updateQuestion({_id: new mongo.ObjectId(req.body.questionId)}, {bestAnswerId: new mongo.ObjectId(req.body.answerId)}, 
     function (err, isSuccess) {
         if (err) {
             res.status(500).send(err);
         } else {
-            res.send("success");
+            res.send(isSuccess);
         }
     });
 });

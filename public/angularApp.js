@@ -120,7 +120,7 @@ app.controller('getQuestionController', function ($scope, $http, $routeParams, $
         $http.post("/updateQuestion/", question).then(function (response) {
             location.reload();
         }, function(err) {
-            alert(error.data)
+            alert(err.data)
         });
     }
 });
