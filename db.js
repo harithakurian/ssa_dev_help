@@ -33,6 +33,16 @@ module.exports = function (db) {
         });
     }
 
+    this.updateUser = function (filter, update, callback) {
+        usersCollection.updateOne(filter, { $set: update }, function (err, results) {
+            if (err) {
+                callback(err, false);
+            } else {
+                callback(null, true);
+            }
+        });
+    }
+
     
     this.insertAnswer = function(answer, callback){
         answersCollection.insert(answer, function(err, result){
@@ -83,6 +93,16 @@ module.exports = function (db) {
                 callback(err, null);
             } else {
                 callback(null, docs);
+            }
+        });
+    }
+
+    this.updateQuestion = function (filter, update, callback) {
+        questionsCollection.updateOne(filter, { $set: update }, function (err, results) {
+            if (err) {
+                callback(err, false);
+            } else {
+                callback(null, true);
             }
         });
     }

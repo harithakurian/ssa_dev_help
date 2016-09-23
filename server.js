@@ -47,22 +47,14 @@ app.post('/login/', function (req, res) {
         password: req.body.password
     };
 
-    console.log('login UserName is: ' + login.userName);
-    console.log('password is: ' + login.password);
-    console.dir(login);
-
     db.findUsers(login, (err, results) => {
         if (err || results.length !== 1) {
-            console.log("something is wrong");
-            res.send("no user is found");
+            res.status(500).send("no user is found");
         } else {
             req.session.currentUser = {
                 userName: login.userName
             };
-            console.log("user found");
             res.send("user found");
-
-            // @TODO set session
         }
     });
 });

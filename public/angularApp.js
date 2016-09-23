@@ -10,8 +10,8 @@ app.config(function ($routeProvider) {
         templateUrl: "static/Templates/insertQuestion.html"
     }).when("/view-question/:questionId", {
         templateUrl: "static/Templates/view-question.html"
-    }).when("/user/:userName", {
-        templateUrl: "static/Templates/feed.html"
+    }).when("/user/:userName?", {
+        templateUrl: "static/Templates/user.html"
     }).when("/", {
         templateUrl: "static/Templates/feed.html"
     }).otherwise({
@@ -20,13 +20,15 @@ app.config(function ($routeProvider) {
 });
 
 app.controller('SSADevHelpCtrl', function ($scope, $http) {
-    $scope.getPictures = function () {
+    $scope.login = function () {
         var userObj = {
             "userName": $scope.userName,
             "password": $scope.password
         };
         $http.post("/login/", userObj, { cache: false }).then(function (response) {
             location = location.origin + "/";
+        }, function (error) {
+            $scope.errMsg = "Incorrect userName/password."
         });
     };
 
@@ -146,6 +148,10 @@ app.controller('viewAllQuestionsController', function ($scope, $http, $routePara
         $scope.questions = response.data;
         console.log(response.data);
     });     
+});
+
+app.controller("viewUserProfileController", function () {
+
 });
 
 app.directive('onFinishRender', function ($timeout) {
