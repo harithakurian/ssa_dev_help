@@ -60,6 +60,10 @@ app.controller('NavController', function ($scope, $location, $http) {
 
 app.controller('getQuestionsController', function ($scope, $http, $routeParams) 
 {
+    $scope.$on('ngRepeatFinished', function(ngRepeatFinishedEvent) {
+        $("#questions").owlCarousel();
+    })
+
     var userName = $routeParams.userName;
     var url = "/getQuestions/";
     if (userName) {
@@ -123,4 +127,17 @@ app.controller('viewAllQuestionsController', function ($scope, $http, $routePara
         $scope.questions = response.data;
         console.log(response.data);
     });     
+});
+
+app.directive('onFinishRender', function ($timeout) {
+    return {
+        restrict: 'A',
+        link: function (scope, element, attr) {
+            if (scope.$last === true) {
+                $timeout(function () {
+                    scope.$emit(attr.onFinishRender);
+                });
+            }
+        }
+    }
 });
