@@ -66,6 +66,15 @@ $http.get("/getQuestions/", {cache: false}).then(function(response) {
          });     
 });
 
+app.controller('getQuestionController', function ($scope, $http, $routeParams) 
+{ 
+    var id = $routeParams.questionId;
+    $http.get("/api/getQuestion/" + id, { cache: false }).then(function (response) {
+        $scope.question = response.data;
+        console.log(response.data);
+         });     
+});
+
 app.controller('insertQuestionController', function ($scope, $http) 
 { 
     $scope.required = true;

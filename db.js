@@ -88,11 +88,13 @@ module.exports = function (db) {
     }
 
     this.findQuestion = function (filter, callback) {
-        questionsCollection.findOne(filter)(function (err, doc) {
+        console.log(filter);
+        questionsCollection.findOne(filter, function (err, doc) {
             if (err) {
                 callback(err, null);
-            } else {
+            } else {               
                 callback(null, doc);
+                
             }
         });
     }

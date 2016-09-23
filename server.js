@@ -4,7 +4,8 @@ var express = require('express'),
     path = require('path'),
     mkdirp = require('mkdirp');
 
-var MongoClient = require('mongodb').MongoClient;
+var mongo = require('mongodb');
+var MongoClient = mongo.MongoClient;
 var db;
 
 var multer = require('multer'),
@@ -131,16 +132,15 @@ app.post('/insertComment/', function (req, res) {
         }
     )    
 })
-app.get('/api/view-question/:questionId', function (req, res) {
+app.get('/api/getQuestion/:questionId', function (req, res) {
     var filter = {
-        questionId: req.params.questionId
+        _id: new mongo.ObjectId(req.params.questionId)
     };
     db.findQuestion(filter, function(err, result) {
         if (err) {
             res.status(500).send(err);
-        } else {
-            console.log(results);
-            res.json(results);
+        } else {                        
+            res.json(result);
         }
     })
 });
