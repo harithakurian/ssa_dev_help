@@ -61,7 +61,14 @@ app.controller('NavController', function ($scope, $location, $http) {
 app.controller('getQuestionsController', function ($scope, $http, $routeParams) 
 {
     $scope.$on('ngRepeatFinished', function(ngRepeatFinishedEvent) {
-        $("#questions").owlCarousel();
+        $("#questions").owlCarousel({
+
+            navigation: true, // Show next and prev buttons
+            slideSpeed: 300,
+            paginationSpeed: 400,
+            singleItem: true,
+            autoPlay:   true
+        });
     })
 
     var userName = $routeParams.userName;
