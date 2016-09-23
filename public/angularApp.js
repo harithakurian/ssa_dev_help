@@ -14,6 +14,8 @@ app.config(function ($routeProvider) {
         templateUrl: "static/Templates/feed.html"
     }).when("/", {
         templateUrl: "static/Templates/feed.html"
+    }).when("/SearchResults", {
+        templateUrl: "static/Templates/searchResults.html"
     }).otherwise({
         templateUrl: 'static/Templates/feed.html'
     });
@@ -52,6 +54,16 @@ app.controller('NavController', function ($scope, $location, $http) {
     $scope.logout = function (){
         $http.post("/logout/").then(function (response){
             window.location = "/";
+        }, function (error){
+            console.log(error);
+        });
+    };
+
+    $scope.searchQuestions = function (){
+        var searchStr = $scope.searchStr;        
+        $http.post("/api/searchQuestions/", {title: searchStr}).then(function (response){
+            window.location = "/#/SearchResults";
+            $scope.$root.searchResults = response.data;
         }, function (error){
             console.log(error);
         });
