@@ -6,12 +6,14 @@ var app = angular.module("ssadevhelp", ["ngRoute"]);
 app.config(function ($routeProvider) {
     $routeProvider.when("/Friends", {
         templateUrl: "static/Templates/friends.html"
-    }).when("/:userName?", {
-        templateUrl: "static/Templates/feed.html"
-    }).when("/InsertQuestion/", {
+    }).when("/InsertQuestion", {
         templateUrl: "static/Templates/insertQuestion.html"
     }).when("/view-question/:questionId", {
         templateUrl: "static/Templates/view-question.html"
+    }).when("/user/:userName", {
+        templateUrl: "static/Templates/feed.html"
+    }).when("/", {
+        templateUrl: "static/Templates/feed.html"
     }).otherwise({
         templateUrl: 'static/Templates/feed.html'
     });
@@ -75,11 +77,11 @@ app.controller('insertQuestionController', function ($scope, $http)
 { 
     $scope.required = true;
     $scope.insertQuestion = function () {
-    var question = {
-        title: $scope.title,
-        content:$scope.content
-    };
-    $http.post("/insertQuestion/", question).then(function (response) {
+        var question = {
+            title: $scope.title,
+            content: $scope.content
+        };
+        $http.post("/insertQuestion/", question).then(function (response) {
             window.location = "/#/";
         }, function (error) {
             console.log(error);
