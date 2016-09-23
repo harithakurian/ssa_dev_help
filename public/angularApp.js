@@ -10,8 +10,8 @@ app.config(function ($routeProvider) {
         templateUrl: "static/Templates/insertQuestion.html"
     }).when("/view-question/:questionId", {
         templateUrl: "static/Templates/view-question.html"
-    }).when("/user/:userName", {
-        templateUrl: "static/Templates/feed.html"
+    }).when("/user/:userName?", {
+        templateUrl: "static/Templates/user.html"
     }).when("/", {
         templateUrl: "static/Templates/feed.html"
     }).when("/SearchResults", {
@@ -22,13 +22,15 @@ app.config(function ($routeProvider) {
 });
 
 app.controller('SSADevHelpCtrl', function ($scope, $http) {
-    $scope.getPictures = function () {
+    $scope.login = function () {
         var userObj = {
             "userName": $scope.userName,
             "password": $scope.password
         };
         $http.post("/login/", userObj, { cache: false }).then(function (response) {
             location = location.origin + "/";
+        }, function (error) {
+            $scope.errMsg = "Incorrect userName/password."
         });
     };
 
@@ -73,7 +75,14 @@ app.controller('NavController', function ($scope, $location, $http) {
 app.controller('getQuestionsController', function ($scope, $http, $routeParams) 
 {
     $scope.$on('ngRepeatFinished', function(ngRepeatFinishedEvent) {
-        $("#questions").owlCarousel();
+        $("#questions").owlCarousel({
+
+            navigation: true, // Show next and prev buttons
+            slideSpeed: 300,
+            paginationSpeed: 400,
+            singleItem: true,
+            autoPlay:   true
+        });
     })
 
     var userName = $routeParams.userName;
@@ -114,6 +123,18 @@ app.controller('getQuestionController', function ($scope, $http, $routeParams, $
             alert(error.data);
         });
     }
+
+    $scope.acceptAnswer = function (questionId, answerId) {
+        var question = {
+            questionId: questionId,
+            answerId: answerId
+        };
+        $http.post("/updateQuestion/", question).then(function (response) {
+            location.reload();
+        }, function(err) {
+            alert(err.data)
+        });
+    }
 });
 
 app.controller('insertQuestionController', function ($scope, $http) 
@@ -139,6 +160,10 @@ app.controller('viewAllQuestionsController', function ($scope, $http, $routePara
         $scope.questions = response.data;
         console.log(response.data);
     });     
+});
+
+app.controller("viewUserProfileController", function () {
+
 });
 
 app.directive('onFinishRender', function ($timeout) {

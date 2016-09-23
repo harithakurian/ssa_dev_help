@@ -47,22 +47,14 @@ app.post('/login/', function (req, res) {
         password: req.body.password
     };
 
-    console.log('login UserName is: ' + login.userName);
-    console.log('password is: ' + login.password);
-    console.dir(login);
-
     db.findUsers(login, (err, results) => {
         if (err || results.length !== 1) {
-            console.log("something is wrong");
-            res.send("no user is found");
+            res.status(500).send("no user is found");
         } else {
             req.session.currentUser = {
                 userName: login.userName
             };
-            console.log("user found");
             res.send("user found");
-
-            // @TODO set session
         }
     });
 });
@@ -214,6 +206,18 @@ app.post('/insertQuestion/', function (req, res) {
     });
 });
 
+app.post('/updateQuestion/', function (req, res) {
+    db.updateQuestion({_id: new mongo.ObjectId(req.body.questionId)}, {bestAnswerId: new mongo.ObjectId(req.body.answerId)}, 
+    function (err, isSuccess) {
+        if (err) {
+            res.status(500).send(err);
+        } else {
+            res.send(isSuccess);
+        }
+    });
+});
+
+
 app.post('/api/searchQuestions/', function (req, res) {
     var filter = {
          title: { $regex : req.body.title }
@@ -222,7 +226,6 @@ app.post('/api/searchQuestions/', function (req, res) {
         if (err) {
             res.status(500).send(err);
         } else {
-            console.log("searchQuestions"+ results);
             res.json(results);
         }
     })

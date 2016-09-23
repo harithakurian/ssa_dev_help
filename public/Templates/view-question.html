@@ -3,12 +3,22 @@
         <div><span class="bold">Title:</span>{{question.title}}</div>
         <div><span class="bold">Question:</span> {{question.content}}</div>
         <div><span class="bold">Date:</span> {{question.dateTime}}</div>
+        <div ng-if="question.bestAnswerId">This question has an accepted answer</div>
         <br/>
     </div>
-    <div style="text-align: right;" ng-repeat="answer in answers">
+    <div ng-if="question.bestAnswerId == answer._id" style="text-align: right;" ng-repeat="answer in answers">
+        
+        <div><b>Accepted Answer</b></div>
         <div><span class="bold">Answer:</span> {{answer.content}}</div>
         <div><span class="bold">Date:</span> {{answer.dateTime}}</div>
         <div><span class="bold">By:</span> {{answer.userName}}</div>
+        <br/>
+    </div>
+    <div ng-if="question.bestAnswerId != answer._id" style="text-align: right;" ng-repeat="answer in answers">
+        <div><span class="bold">Answer:</span> {{answer.content}}</div>
+        <div><span class="bold">Date:</span> {{answer.dateTime}}</div>
+        <div><span class="bold">By:</span> {{answer.userName}}</div>
+        <div><button ng-click="acceptAnswer(question._id, answer._id)" class="btn btn-primary btn-large"><i class="glyphicon glyphicon-thumbs-up"></i> Best Answer</button></div>
         <br/>
     </div>
     <form ng-submit="insertAnswer()">
