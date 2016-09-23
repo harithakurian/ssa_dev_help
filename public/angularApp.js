@@ -93,7 +93,9 @@ app.controller('getQuestionController', function ($scope, $http, $routeParams, $
             dateTime: new Date()
         };
         $http.post("/api/postAnswer/", answer).then(function (response) {
-            console.log(response);
+            location.reload();
+        }, function(err) {
+            alert(error.data);
         });
     }
 });
