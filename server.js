@@ -135,10 +135,15 @@ app.get('/api/view-question/:questionId', function (req, res) {
     // @TODO: take question and query for question with id
 });
 
-app.get('/getQuestions/', function (req, res) {
+app.get('/getQuestions/:userName?', function (req, res) {
+    var who = req.session.currentUser.userName;
+    if (req.params.userName) {
+        who = req.params.userName;
+    }
     var filter = {
-        userName: req.session.currentUser.userName
+        userName: who
     };
+    
     db.findQuestions(filter, function(err, results) {
         if (err) {
             res.status(500).send(err);
@@ -178,7 +183,7 @@ app.get('/register', function (req, res) {
 });
 
 // Initialize connection once
-MongoClient.connect("mongodb://PC93:27017/ssa-dev-help-db", function (err, database) {
+MongoClient.connect("mongodb://localhost:27017/ssa-dev-help-db", function (err, database) {
     if (err) {
         throw err;
     }

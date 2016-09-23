@@ -6,7 +6,7 @@ var app = angular.module("ssadevhelp", ["ngRoute"]);
 app.config(function ($routeProvider) {
     $routeProvider.when("/Friends", {
         templateUrl: "static/Templates/friends.html"
-    }).when("/", {
+    }).when("/:userName?", {
         templateUrl: "static/Templates/feed.html"
     }).when("/InsertQuestion/", {
         templateUrl: "static/Templates/insertQuestion.html"
@@ -50,20 +50,25 @@ app.controller('NavController', function ($scope, $location, $http) {
     $scope.logout = function (){
         $http.post("/logout/").then(function (response){
             window.location = "/";
-        }, function (erro){
+        }, function (error){
             console.log(error);
         });
     }
 });
 
-app.controller('getQuestionsController', function ($scope, $http) 
-{ 
-$http.get("/getQuestions/", {cache: false}).then(function(response) {
-            // location = location.origin + "/";
-            //console.log($scope.userName);
-            $scope.questions = response.data;
-            console.log(response.data);
-         });     
+app.controller('getQuestionsController', function ($scope, $http, $routeParams) 
+{
+    var userName = $routeParams.userName;
+    var url = "/getQuestions/";
+    if (userName) {
+        url += userName;
+    }
+    $http.get(url, { cache: false }).then(function (response) {
+        // location = location.origin + "/";
+        //console.log($scope.userName);
+        $scope.questions = response.data;
+        console.log(response.data);
+    });     
 });
 
 app.controller('insertQuestionController', function ($scope, $http) 
