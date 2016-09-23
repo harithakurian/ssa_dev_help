@@ -145,10 +145,30 @@ app.get('/api/getQuestion/:questionId', function (req, res) {
     })
 });
 
-app.get('/getQuestions/', function (req, res) {
+app.get('/getQuestions/:userName?', function (req, res) {
+    var who = req.session.currentUser.userName;
+    if (req.params.userName) {
+        who = req.params.userName;
+    }
     var filter = {
-        userName: req.session.currentUser.userName
+        userName: who
     };
+    
+    db.findQuestions(filter, function(err, results) {
+        if (err) {
+            res.status(500).send(err);
+        } else {
+            console.log(results);
+            res.json(results);
+        }
+    })
+
+    // @TODO
+});
+
+app.get('/viewAllQuestions/', function (req, res) {
+    var filter = {};
+    
     db.findQuestions(filter, function(err, results) {
         if (err) {
             res.status(500).send(err);
