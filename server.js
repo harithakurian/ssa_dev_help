@@ -218,15 +218,14 @@ app.post('/updateQuestion/', function (req, res) {
 });
 
 
-app.get('/api/searchQuestions/:title', function (req, res) {
+app.post('/api/searchQuestions/', function (req, res) {
     var filter = {
-        title: new mongo.ObjectId(req.params.title)
-    };
+         title: { $regex : req.body.title }
+    };    
     db.findQuestions(filter, function(err, results) {
         if (err) {
             res.status(500).send(err);
         } else {
-            console.log(results);
             res.json(results);
         }
     })
