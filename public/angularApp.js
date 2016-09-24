@@ -26,6 +26,8 @@ app.controller('SSADevHelpCtrl', function ($scope, $http) {
             "password": $scope.password
         };
         $http.post("/login/", userObj, { cache: false }).then(function (response) {
+            $scope.$root.currentUser = response.data;
+            alert($scope.$root.currentUser);
             location = location.origin + "/";
         }, function (error) {
             $scope.errMsg = "Incorrect userName/password."

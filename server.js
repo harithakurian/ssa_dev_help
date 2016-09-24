@@ -54,7 +54,7 @@ app.post('/login/', function (req, res) {
             req.session.currentUser = {
                 userName: login.userName
             };
-            res.send("user found");
+            res.send(login.userName);
         }
     });
 });
@@ -241,7 +241,7 @@ app.get('/register', function (req, res) {
 });
 
 // Initialize connection once
-MongoClient.connect("mongodb://PC93:27017/ssa-dev-help-db", function (err, database) {
+MongoClient.connect("mongodb://localhost:27017/ssa-dev-help-db", function (err, database) {
     if (err) {
         throw err;
     }
