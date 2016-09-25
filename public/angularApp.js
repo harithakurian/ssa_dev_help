@@ -29,7 +29,7 @@ app.controller('SSADevHelpCtrl', function ($scope, $http) {
         };
         $http.post("/login/", userObj, { cache: false }).then(function (response) {
             $scope.$root.currentUser = response.data;
-            alert($scope.$root.currentUser);
+           // alert($scope.$root.currentUser);
             location = location.origin + "/";
         }, function (error) {
             $scope.errMsg = "Incorrect userName/password."
@@ -100,9 +100,25 @@ app.controller('getQuestionsController', function ($scope, $http, $routeParams)
     });     
 });
 
-app.controller('getQuestionController', function ($scope, $http, $routeParams, $q) 
+app.controller('getQuestionController', function ($scope, $http, $routeParams, $q, $rootScope) 
 { 
+
+    $http.get("/getSessionUser/").then(function (response) {
+        //alert("Get Session User is " + response.data);
+        $rootScope.user =  response.data;
+        //alert("Inside Get Session $root scope user variable is set to " + $rootScope.user);
+    }, function(err) {
+        alert(err.data);
+    });
+    //alert("session user is "+$rootScope.user);
+    
     var questionId = $routeParams.questionId;
+    //alert("question ID is " + questionId);
+
+    //$rootScope.user =  sessionUser;
+    //alert("Root Scope user is " + $rootScope.user);
+
+    //alert("In Get Question Controller Root Scope User is " + $rootScope.user);
 
     $scope.questionGet = $http.get("/api/getQuestion/" + questionId, { cache: false });
     $scope.answerGet  = $http.get("/api/getAnswersByQuestion/" + questionId, { cache: false });
@@ -126,13 +142,24 @@ app.controller('getQuestionController', function ($scope, $http, $routeParams, $
         });
     }
 
+    //  $scope.viewAllQuestions = function () {
+    //      $http.get("/viewAllQuestions/", { cache: false }).then(function (response) {
+    //      $scope.questions = response.data;
+    //      console.log(response.data);
+    //     });   
+    //  }
+
     $scope.acceptAnswer = function (questionId, answerId) {
         var question = {
             questionId: questionId,
             answerId: answerId
         };
         $http.post("/updateQuestion/", question).then(function (response) {
-            location.reload();
+            //$scope.$root.user = response.data;
+            //alert("Root current User is: " + response.data);
+            //$rootScope.user = response.data;
+            //window.location = "/#/view-question/"+questionId;
+            location.reload(true);
         }, function(err) {
             alert(err.data)
         });
@@ -156,8 +183,10 @@ app.controller('insertQuestionController', function ($scope, $http)
     }      
 });
 
-app.controller('viewAllQuestionsController', function ($scope, $http, $routeParams) 
+app.controller('viewAllQuestionsController', function ($scope, $http, $routeParams, $rootScope) 
 {
+    //var userName = $routeParams.userName;
+    //$rootScope.user = userName;
     $http.get("/viewAllQuestions/", { cache: false }).then(function (response) {
         $scope.questions = response.data;
         console.log(response.data);

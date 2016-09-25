@@ -124,6 +124,10 @@ app.post('/insertComment/', function (req, res) {
     )    
 })
 
+app.get("/getSessionUser/", function (req, res) {
+    res.send(req.session.currentUser.userName);
+});
+
 app.get('/api/getQuestion/:questionId', function (req, res) {
     var filter = {
         _id: new mongo.ObjectId(req.params.questionId)
@@ -192,7 +196,8 @@ app.post('/insertQuestion/', function (req, res) {
         userName: req.session.currentUser.userName,
         title: req.body.title,
         content:req.body.content,
-        dateTime: new Date()
+        dateTime: new Date(),
+        bestAnswerId: null
     };
 
     console.dir(question);
@@ -212,7 +217,8 @@ app.post('/updateQuestion/', function (req, res) {
         if (err) {
             res.status(500).send(err);
         } else {
-            res.send(isSuccess);
+            console.log("Update Question user Name is: " + req.session.currentUser.userName);
+            res.send(req.session.currentUser.userName);
         }
     });
 });

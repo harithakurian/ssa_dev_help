@@ -16,8 +16,8 @@
     <div ng-if="question.bestAnswerId != answer._id" style="text-align: right;" ng-repeat="answer in answers">
         <div><span class="bold">Answer:</span> {{answer.content}}</div>
         <div><span class="bold">Date:</span> {{answer.dateTime}}</div>
-        <div><span class="bold">By:</span> {{answer.userName}}/{{$rootScope.currentUser}}</div>
-        <div ng-if="question.userName == $rootScope.currentUser"><button ng-click="acceptAnswer(question._id, answer._id)" class="btn btn-primary btn-large"><i class="glyphicon glyphicon-thumbs-up"></i> Best Answer</button></div>
+        <div><span class="bold">By:</span> {{answer.userName}}</div>
+        <div ng-if="question.userName == user"><button ng-click="acceptAnswer(question._id, answer._id)" class="btn btn-primary btn-large"><i class="glyphicon glyphicon-thumbs-up"></i> Best Answer</button></div>
         <br/>
     </div>
     <form ng-submit="insertAnswer()">
