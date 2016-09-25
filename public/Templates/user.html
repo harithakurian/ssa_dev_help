@@ -1,22 +1,30 @@
 <div ng-controller="viewUserProfileController">
-    <div>
-        <span>User Name: </span>
-        <span></span>
-    </div>
-    <div>
-        <span>Display: </span>
-        <span></span>
-    </div>
-    <div>
-        <span>Questions asked by you: </span>
-        <span></span>
-    </div>
-    <div>
-        <span>Answers posted by you: </span>
-        <span></span>
-    </div>
-    <div>
-        <span>Last visited time: </span>
-        <span></span>
+    <div class="userProfile" ng-repeat="userProfile in profile">
+        <div>
+            <span class="bold">User Name:</span>
+            <span>{{userProfile.userName}}</span>
+        </div>
+        <div>
+            <span class="bold">Display:</span>
+            <span>{{userProfile.profileName}}</span>
+        </div>
+        <div>
+            <span class="bold">Questions asked by you: </span>
+            <span></span>
+        </div>
+        <div>
+            <span class="bold">Answers posted by you: </span>
+            <span></span>
+        </div>
+        <div>
+            <span class="bold">Last Log In Time:</span>
+            <span>{{userProfile.lastLoggedInDateTime}}</span>
+        </div>
     </div>
 </div>
+
+<style type="text/css">
+    .bold {
+        font-weight: bold;
+    }
+</style>

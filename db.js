@@ -33,6 +33,16 @@ module.exports = function (db) {
         });
     }
 
+    this.getUserProfileInfo = function (filter, callback) {
+        usersCollection.find(filter).toArray(function (err, docs) {
+            if (err) {
+                callback(err, null);
+            } else {
+                callback(null, docs);
+            }
+        });
+    }
+
     this.updateUser = function (filter, update, callback) {
         usersCollection.updateOne(filter, { $set: update }, function (err, results) {
             if (err) {

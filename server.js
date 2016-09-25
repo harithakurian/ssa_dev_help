@@ -44,7 +44,7 @@ function checkAuth(req, res, next) {
 app.post('/login/', function (req, res) {
     var login = {
         userName: req.body.userName,
-        password: req.body.password
+        password: req.body.password,
     };
 
     db.findUsers(login, (err, results) => {
@@ -60,18 +60,24 @@ app.post('/login/', function (req, res) {
 });
 
 app.post('/logout/', function (req, res) {
-    req.session.destroy(function(err) {
-
-        res.redirect("/");
+    db.updateUser({userName: req.session.currentUser.userName}, {lastLoggedInDateTime: new Date()}, function (err, isSuccess) {
+        if (err) {
+            res.status(500).send(err);
+        }
+        else {
+            req.session.destroy(function(err) {
+            res.redirect("/");
+            });
+        }
     });
-
 });
 
 app.post('/insertUser/', function (req, res) {
     var user = {
         userName: req.body.userName,
         password: req.body.password,
-        profileName: req.body.profileName
+        profileName: req.body.profileName,
+        lastLoggedInDateTime: new Date()
     };
 
     db.insertUser(user, (err, success) => {
@@ -127,6 +133,17 @@ app.post('/insertComment/', function (req, res) {
 app.get("/getSessionUser/", function (req, res) {
     res.send(req.session.currentUser.userName);
 });
+
+app.post("/getUserProfileInfo/", function (req, res) {
+    var userName = {userName: req.body.userName};
+    db.getUserProfileInfo(userName, (err, result) => {
+        if (err || result.length !== 1) {
+            res.status(500).send("User is not found in the system!");
+        } else {
+                res.json(result);
+            };
+        });
+    });
 
 app.get('/api/getQuestion/:questionId', function (req, res) {
     var filter = {

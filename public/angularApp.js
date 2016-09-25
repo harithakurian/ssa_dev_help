@@ -25,7 +25,8 @@ app.controller('SSADevHelpCtrl', function ($scope, $http) {
     $scope.login = function () {
         var userObj = {
             "userName": $scope.userName,
-            "password": $scope.password
+            "password": $scope.password,
+            "lastVisitDateTime": new Date()
         };
         $http.post("/login/", userObj, { cache: false }).then(function (response) {
             $scope.$root.currentUser = response.data;
@@ -96,7 +97,7 @@ app.controller('getQuestionsController', function ($scope, $http, $routeParams)
         // location = location.origin + "/";
         //console.log($scope.userName);
         $scope.questions = response.data;
-        console.log(response.data);
+        //console.log(response.data);
     });     
 });
 
@@ -124,7 +125,7 @@ app.controller('getQuestionController', function ($scope, $http, $routeParams, $
     $scope.answerGet  = $http.get("/api/getAnswersByQuestion/" + questionId, { cache: false });
 
     $q.all([$scope.questionGet, $scope.answerGet]).then(function(values) {
-        console.log(values[0].data);
+        //console.log(values[0].data);
         $scope.question = values[0].data;
         $scope.answers = values[1].data;
     });
@@ -189,12 +190,18 @@ app.controller('viewAllQuestionsController', function ($scope, $http, $routePara
     //$rootScope.user = userName;
     $http.get("/viewAllQuestions/", { cache: false }).then(function (response) {
         $scope.questions = response.data;
-        console.log(response.data);
+        //console.log(response.data);
     });     
 });
 
-app.controller("viewUserProfileController", function () {
-
+app.controller('viewUserProfileController', function ($scope, $http, $routeParams) 
+{
+        var userProfile = {userName: $routeParams.userName};
+        $http.post('/getUserProfileInfo/', userProfile, { cache: false }).then(function (response){
+        $scope.profile = response.data;
+        //alert("$scope.profile is " + $scope.profile);
+        console.log($scope.profile);
+    });
 });
 
 app.directive('onFinishRender', function ($timeout) {
