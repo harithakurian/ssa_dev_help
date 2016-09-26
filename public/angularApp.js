@@ -30,7 +30,7 @@ app.config(function ($routeProvider) {
 });
 
 app.controller('SSADevHelpCtrl', function ($scope, $http, $q) {
-        $scope.login = function () {
+        $scope.login2 = function () {
             var userObj = {
                 "userName": $scope.userName,
                 "password": $scope.password
@@ -53,7 +53,9 @@ app.controller('SSADevHelpCtrl', function ($scope, $http, $q) {
             }, function (err) {
                 console.log(err);
                 if (err) {
-                    $scope.errMsg = "Incorrect userName/password."
+                    $scope.errMsg = "Incorrect userName/password.";
+                    //location.reload();
+                    $q.reject(err);
                 }
             });
     };
