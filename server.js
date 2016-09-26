@@ -256,7 +256,7 @@ app.post('/updateQuestion/', function (req, res) {
 
 app.post('/api/searchQuestions/', function (req, res) {
     var filter = {
-         title: { $regex : req.body.title }
+         title: {$regex : new RegExp(req.body.title.toLowerCase(), "i")}
     };    
     db.findQuestions(filter, function(err, results) {
         if (err) {
