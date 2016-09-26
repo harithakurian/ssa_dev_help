@@ -231,13 +231,21 @@ app.controller('viewAllQuestionsController', function ($scope, $http, $routePara
     });     
 });
 
-app.controller('viewUserProfileController', function ($scope, $http, $routeParams) 
+app.controller('viewUserProfileController', function ($scope, $http, $routeParams, $q) 
 {
-        var userProfile = {userName: $routeParams.userName};
-        $http.post('/getUserProfileInfo/', userProfile, { cache: false }).then(function (response){
-        $scope.profile = response.data;
-        //alert("$scope.profile is " + $scope.profile);
-        console.log($scope.profile);
+        var username = {userName: $routeParams.userName};
+        $scope.userProfile = $http.post("/getUserProfileInfo/", username, { cache: false });
+        $scope.numberOfQuestions = $http.post("/getNumberOfQuestions/", username, { cache: false });
+        $scope.numberOfAnswers = $http.post("/getNumberOfAnswers/", username, { cache: false });
+        $q.all([$scope.userProfile, $scope.numberOfQuestions, $scope.numberOfAnswers]).then(function (values){
+        $scope.profile = values[0].data;
+        $scope.questionCount = values[1].data;
+        $scope.answerCount = values[2].data;
+    }, function (err) {
+        if (err) {
+            console.log("Getting user profile failed!");
+            $q.reject(err);
+        }
     });
 });
 
