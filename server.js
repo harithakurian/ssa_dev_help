@@ -263,7 +263,7 @@ app.get('/register', function (req, res) {
 });
 
 // Initialize connection once
-MongoClient.connect("mongodb://localhost:27017/ssa-dev-help-db", function (err, database) {
+MongoClient.connect("mongodb://PC93:27017/ssa-dev-help-db", function (err, database) {
     if (err) {
         throw err;
     }
