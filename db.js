@@ -1,9 +1,10 @@
 module.exports = function (db) {
+    var MongoId = require("mongodb").ObjectID;
     var usersCollection = db.collection('users');
     var questionsCollection = db.collection('questions');
     var answersCollection = db.collection('answers');
     var commentsCollection = db.collection('comments');
-
+    
     /*
      * args: user object (or array of user objects)
      * return: callback(err, isSuccess)
@@ -108,6 +109,7 @@ module.exports = function (db) {
     }
 
     this.updateQuestion = function (filter, update, callback) {
+        console.log(update);
         questionsCollection.updateOne(filter, { $set: update }, function (err, results) {
             if (err) {
                 callback(err, false);
