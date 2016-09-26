@@ -52,10 +52,23 @@ app.controller('SSADevHelpCtrl', function ($scope, $http) {
     }
 });
 
-app.controller('NavController', function ($scope, $location, $http) {
+app.controller('NavController', function ($scope, $location, $http, $interval) {
     $scope.isActive = function (viewLocation) {
         return viewLocation === $location.path();
     };
+
+    $http.get("/api/getUserInfo").then((res) => {
+        $scope.user = res.data;
+    });
+
+    $scope.newAnswerCount = 0;
+    $interval(() => {
+        $http.get("/api/getNewAnswers").then((res) => {
+            $scope.$root.newAnswers = res.data;
+            $scope.newAnswerCount = res.data.length;
+        });
+    }, 1000);
+
     $scope.logout = function (){
         $http.post("/logout/").then(function (response){
             window.location = "/";
@@ -123,9 +136,9 @@ app.controller('getQuestionController', function ($scope, $http, $routeParams, $
 
     $scope.questionGet = $http.get("/api/getQuestion/" + questionId, { cache: false });
     $scope.answerGet  = $http.get("/api/getAnswersByQuestion/" + questionId, { cache: false });
+    var updateQuestionLastAccessedDate = $http.post("/api/updateQuestionLastAccessedDate", {questionId: questionId, updatedKeyValue : { lastAccessedDate: new Date() } });
 
-    $q.all([$scope.questionGet, $scope.answerGet]).then(function(values) {
-        //console.log(values[0].data);
+    $q.all([$scope.questionGet, $scope.answerGet, updateQuestionLastAccessedDate]).then(function(values) {
         $scope.question = values[0].data;
         $scope.answers = values[1].data;
     });
@@ -136,19 +149,15 @@ app.controller('getQuestionController', function ($scope, $http, $routeParams, $
             content: $scope.answer,
             dateTime: new Date()
         };
-        $http.post("/api/postAnswer/", answer).then(function (response) {
+        var postAnswer = $http.post("/api/postAnswer/", answer);
+        var updateQuestionLastAnsweredDate = $http.post("/api/updateQuestionLastAnsweredDate", {questionId: questionId, updatedKeyValue : { lastAnsweredDate: new Date() } });
+
+        $q.all([postAnswer, updateQuestionLastAnsweredDate]).then((success) => {
             location.reload();
-        }, function(err) {
+        }, (error) => {
             alert(error.data);
         });
     }
-
-    //  $scope.viewAllQuestions = function () {
-    //      $http.get("/viewAllQuestions/", { cache: false }).then(function (response) {
-    //      $scope.questions = response.data;
-    //      console.log(response.data);
-    //     });   
-    //  }
 
     $scope.acceptAnswer = function (questionId, answerId) {
         var question = {

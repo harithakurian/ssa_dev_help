@@ -134,6 +134,28 @@ app.get("/getSessionUser/", function (req, res) {
     res.send(req.session.currentUser.userName);
 });
 
+app.get("/api/getUserInfo/", checkAuth, function (req, res) {
+    var userName = req.session.currentUser.userName;
+    db.findUsers({ userName: userName }, function (err, docs) {
+        if (docs) {
+            res.json(docs[0]);
+        } else {
+            res.status(500).send(err);
+        }
+    });
+});
+
+app.get("/api/getNewAnswers", checkAuth, function (req, res) {
+    var userName = req.session.currentUser.userName;
+    db.findQuestions({userName: userName, $where: "this.lastAccessedDate < this.lastAnsweredDate"}, (err, docs) => {
+        if (docs) {
+            res.json(docs);
+        } else {
+            res.status(500).send(err);
+        }
+    });
+});
+
 app.post("/getUserProfileInfo/", function (req, res) {
     var userName = {userName: req.body.userName};
     db.getUserProfileInfo(userName, (err, result) => {
@@ -214,7 +236,9 @@ app.post('/insertQuestion/', function (req, res) {
         title: req.body.title,
         content:req.body.content,
         dateTime: new Date(),
-        bestAnswerId: null
+        bestAnswerId: null,
+        lastAccessedDate: new Date(),
+        lastAnsweredDate: null
     };
 
     console.dir(question);
@@ -240,6 +264,31 @@ app.post('/updateQuestion/', function (req, res) {
     });
 });
 
+app.post("/api/updateQuestionLastAccessedDate", checkAuth, function (req, res) {
+    var userName = req.session.currentUser.userName;
+    
+    db.updateQuestion({_id: new mongo.ObjectId(req.body.questionId), userName: userName}, { lastAccessedDate: new Date() }, 
+    function (err, isSuccess) {
+        if (err) {
+            res.status(500).send(err);
+        } else {
+            console.log("Update Question user Name is: " + req.session.currentUser.userName);
+            res.send(req.session.currentUser.userName);
+        }
+    });
+});
+
+app.post("/api/updateQuestionLastAnsweredDate", checkAuth, function (req, res) {
+    db.updateQuestion({_id: new mongo.ObjectId(req.body.questionId) }, { lastAnsweredDate: new Date() }, 
+    function (err, isSuccess) {
+        if (err) {
+            res.status(500).send(err);
+        } else {
+            console.log("Update Question user Name is: " + req.session.currentUser.userName);
+            res.send(req.session.currentUser.userName);
+        }
+    });
+});
 
 app.post('/api/searchQuestions/', function (req, res) {
     var filter = {
@@ -268,7 +317,8 @@ MongoClient.connect("mongodb://localhost:27017/ssa-dev-help-db", function (err, 
         throw err;
     }
 
-    db = require("./db")(database);
+    var obj = require("./db");
+    db = new obj(database);
 
     // Start the application after the database connection is ready
     app.listen(8080);
