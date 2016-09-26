@@ -198,7 +198,7 @@ app.get('/getQuestions/:userName?', function (req, res) {
         if (err) {
             res.status(500).send(err);
         } else {
-            console.log(results);
+            //console.log(results);
             res.json(results);
         }
     })
@@ -213,7 +213,7 @@ app.get('/viewAllQuestions/', function (req, res) {
         if (err) {
             res.status(500).send(err);
         } else {
-            console.log(results);
+            //console.log(results);
             res.json(results);
         }
     })
@@ -247,7 +247,7 @@ app.post('/updateQuestion/', function (req, res) {
         if (err) {
             res.status(500).send(err);
         } else {
-            console.log("Update Question user Name is: " + req.session.currentUser.userName);
+            //console.log("Update Question user Name is: " + req.session.currentUser.userName);
             res.send(req.session.currentUser.userName);
         }
     });

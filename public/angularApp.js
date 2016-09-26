@@ -37,16 +37,17 @@ app.controller('SSADevHelpCtrl', function ($scope, $http, $q) {
 
             $scope.login = $http.post("/login/", userObj, { cache: false });
             $scope.updateUserLastLoggedIn = $http.post("/updateUserLastLoggedIn/", userObj, { cache: false });
-            $q.all([$scope.login, $scope.updateUserLastLoggedIn]).then(function(values) {
-            //console.log(values[0].data);
-            $scope.$root.currentUser = values[0].data;
-            $scope.successfulUpdate = values[1].data;
-            location = location.origin + "/";
-        }). then(function(err) {
-            if (err[0]){
-                $scope.errMsg = "Incorrect userName/password."
-            }
-        });
+            $q.all([$scope.login, $scope.updateUserLastLoggedIn]).then(function (values) {
+                //console.log(values[0].data);
+                $scope.$root.currentUser = values[0].data;
+                $scope.successfulUpdate = values[1].data;
+                location = location.origin + "/";
+            }, function (err) {
+                console.log(err);
+                if (err) {
+                    $scope.errMsg = "Incorrect userName/password."
+                }
+            });
     };
 
     $scope.registerUser = function () {
