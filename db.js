@@ -44,6 +44,26 @@ module.exports = function (db) {
         });
     }
 
+    this.getNumberOfQuestions = function (filter, callback) {
+        questionsCollection.count(filter, function (err, num) {
+            if (err) {
+                callback(err, null);
+            } else {
+                callback(null, num);
+            }
+        });
+    }
+
+    this.getNumberOfAnswers = function (filter, callback) {
+        answersCollection.count(filter, function (err, num) {
+            if (err) {
+                callback(err, null);
+            } else {
+                callback(null, num);
+            }
+        });
+    }
+
     this.updateUser = function (filter, update, callback) {
         usersCollection.updateOne(filter, { $set: update }, function (err, results) {
             if (err) {

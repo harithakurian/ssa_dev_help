@@ -176,6 +176,28 @@ app.get("/api/getNewAnswers", checkAuth, function (req, res) {
          });
      });
 
+app.post("/getNumberOfQuestions/", function (req, res) {
+     var userName = {userName: req.body.userName};
+     db.getNumberOfQuestions(userName, (err, result) => {
+         if (err) {
+             res.status(500).send("User doesn't have any questions in the system!");
+         } else {
+                 res.json(result);
+             };
+         });
+     });
+
+app.post("/getNumberOfAnswers/", function (req, res) {
+     var userName = {userName: req.body.userName};
+     db.getNumberOfAnswers(userName, (err, result) => {
+         if (err) {
+             res.status(500).send("User doesn't have any answers in the system!");
+         } else {
+                 res.json(result);
+             };
+         });
+     });
+
 app.get('/api/getQuestion/:questionId', function (req, res) {
     var filter = {
         _id: new mongo.ObjectId(req.params.questionId)
