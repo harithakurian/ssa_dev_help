@@ -52,9 +52,11 @@ app.post('/login/', function (req, res) {
             res.status(500).send("no user is found");
         } else {
             req.session.currentUser = {
+
                 userName: login.userName,
                 lastLoggedIn: results[0].lastLoggedIn
             };
+
             res.send(login.userName);
         }
     });
