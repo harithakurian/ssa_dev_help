@@ -3,6 +3,14 @@
 
 var app = angular.module("ssadevhelp", ["ngRoute"]);
 
+function chunk(arr, size) {
+    var newArr = [];
+    for (var i=0; i<arr.length; i+=size) {
+        newArr.push(arr.slice(i, i+size));
+    }
+    return newArr;
+}
+
 app.config(function ($routeProvider) {
     $routeProvider.when("/ViewAllQuestions", {
         templateUrl: "static/Templates/viewAllQuestions.html"
@@ -184,11 +192,16 @@ app.controller('insertQuestionController', function ($scope, $http)
     }      
 });
 
-app.controller('viewAllQuestionsController', function ($scope, $http, $routeParams, $rootScope) 
+app.controller('viewAllQuestionsController', function ($scope, $http, $routeParams, $rootScope, $location)
 {
     //var userName = $routeParams.userName;
     //$rootScope.user = userName;
+    $scope.letterLimit = 20;
+    $scope.go = function ( path ) {
+        $location.path( '/view-question/' + path );
+    };
     $http.get("/viewAllQuestions/", { cache: false }).then(function (response) {
+       // $scope.questions = chunk(response.data, 3);
         $scope.questions = response.data;
         //console.log(response.data);
     });     
