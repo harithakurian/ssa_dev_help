@@ -52,23 +52,29 @@ app.post('/login/', function (req, res) {
             res.status(500).send("no user is found");
         } else {
             req.session.currentUser = {
-                userName: login.userName
+                userName: login.userName,
+                lastLoggedIn: results[0].lastLoggedIn
             };
             res.send(login.userName);
         }
     });
 });
 
-app.post('/logout/', function (req, res) {
-    db.updateUser({userName: req.session.currentUser.userName}, {lastLoggedInDateTime: new Date()}, function (err, isSuccess) {
+app.post('/updateUserLastLoggedIn/', function(req, res) {
+    db.updateUser({userName: req.body.userName}, {lastLoggedIn: new Date()}, function (err, isSuccess) {
         if (err) {
             res.status(500).send(err);
         }
         else {
-            req.session.destroy(function(err) {
-            res.redirect("/");
-            });
+            res.send(isSuccess);
         }
+    });
+});
+
+app.post('/logout/', function (req, res) {
+
+     req.session.destroy(function(err) {
+        res.redirect("/");
     });
 });
 
@@ -77,7 +83,7 @@ app.post('/insertUser/', function (req, res) {
         userName: req.body.userName,
         password: req.body.password,
         profileName: req.body.profileName,
-        lastLoggedInDateTime: new Date()
+        lastLoggedIn: new Date()
     };
 
     db.insertUser(user, (err, success) => {
@@ -134,16 +140,23 @@ app.get("/getSessionUser/", function (req, res) {
     res.send(req.session.currentUser.userName);
 });
 
-app.post("/getUserProfileInfo/", function (req, res) {
-    var userName = {userName: req.body.userName};
-    db.getUserProfileInfo(userName, (err, result) => {
-        if (err || result.length !== 1) {
-            res.status(500).send("User is not found in the system!");
-        } else {
-                res.json(result);
-            };
-        });
-    });
+ app.post("/getUserProfileInfo/", function (req, res) {
+     var userName = {userName: req.body.userName};
+     db.getUserProfileInfo(userName, (err, result) => {
+         if (err || result.length !== 1) {
+             res.status(500).send("User is not found in the system!");
+         } else {
+                //  console.dir("Current User: ");
+                //  console.dir(req.session.currentUser);
+                //  console.dir("Before ");
+                //  console.dir( result);
+                 result[0].lastLoggedIn = req.session.currentUser.lastLoggedIn;
+                //  console.dir("After ");
+                //  console.dir( result);
+                 res.json(result);
+             };
+         });
+     });
 
 app.get('/api/getQuestion/:questionId', function (req, res) {
     var filter = {

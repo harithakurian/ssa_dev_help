@@ -21,19 +21,31 @@ app.config(function ($routeProvider) {
     });
 });
 
-app.controller('SSADevHelpCtrl', function ($scope, $http) {
-    $scope.login = function () {
-        var userObj = {
-            "userName": $scope.userName,
-            "password": $scope.password,
-            "lastVisitDateTime": new Date()
-        };
-        $http.post("/login/", userObj, { cache: false }).then(function (response) {
-            $scope.$root.currentUser = response.data;
-           // alert($scope.$root.currentUser);
+app.controller('SSADevHelpCtrl', function ($scope, $http, $q) {
+        $scope.login = function () {
+            var userObj = {
+                "userName": $scope.userName,
+                "password": $scope.password
+            };
+            // $http.post("/login/", userObj, { cache: false }).then(function (response) {
+            //     $scope.$root.currentUser = response.data;
+            // // alert($scope.$root.currentUser);
+            //     location = location.origin + "/";
+            // }, function (error) {
+            //     $scope.errMsg = "Incorrect userName/password."
+            // });
+
+            $scope.login = $http.post("/login/", userObj, { cache: false });
+            $scope.updateUserLastLoggedIn = $http.post("/updateUserLastLoggedIn/", userObj, { cache: false });
+            $q.all([$scope.login, $scope.updateUserLastLoggedIn]).then(function(values) {
+            //console.log(values[0].data);
+            $scope.$root.currentUser = values[0].data;
+            $scope.successfulUpdate = values[1].data;
             location = location.origin + "/";
-        }, function (error) {
-            $scope.errMsg = "Incorrect userName/password."
+        }). then(function(err) {
+            if (err[0]){
+                $scope.errMsg = "Incorrect userName/password."
+            }
         });
     };
 
@@ -41,7 +53,7 @@ app.controller('SSADevHelpCtrl', function ($scope, $http) {
         var userObj = {
             userName: $scope.userName,
             password: $scope.password,
-            profileName: $scope.profileName
+            profileName: $scope.profileName,
         };
         $http.post("/insertUser/", userObj).then(function (response) {
             window.location = "/#/";
