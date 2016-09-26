@@ -282,8 +282,8 @@ MongoClient.connect("mongodb://PC93:27017/ssa-dev-help-db", function (err, datab
     if (err) {
         throw err;
     }
-
-    db = require("./db")(database);
+    var mod = require('./db');
+    db = new mod(database);
 
     // Start the application after the database connection is ready
     app.listen(8080);
