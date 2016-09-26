@@ -18,6 +18,8 @@ app.config(function ($routeProvider) {
         templateUrl: "static/Templates/insertQuestion.html"
     }).when("/view-question/:questionId", {
         templateUrl: "static/Templates/view-question.html"
+    }).when("/updated-questions", {
+        templateUrl: "static/Templates/view-new-answered-questions.html"
     }).when("/user/:userName?", {
         templateUrl: "static/Templates/user.html"
     }).when("/", {
@@ -91,6 +93,13 @@ app.controller('NavController', function ($scope, $location, $http, $interval) {
             $scope.newAnswerCount = res.data.length;
         });
     }, 1000);
+
+    $scope.go = function (modal, questionId) {
+        //$location.path("/view-question/" + questionId);
+        //$("#closeModal").trigger("click");
+        $scope.showModal = false;
+        // window.location = "/#/view-question/" + questionId;
+    }
 
     $scope.logout = function (){
         $http.post("/logout/").then(function (response){
