@@ -5,20 +5,12 @@
             <span>{{userProfile.userName}}</span>
         </div>
         <div>
-            <span class="bold">Display:</span>
+            <span class="bold">Profile Name:</span>
             <span>{{userProfile.profileName}}</span>
         </div>
         <div>
-            <span class="bold">Questions asked by you: </span>
-            <span></span>
-        </div>
-        <div>
-            <span class="bold">Answers posted by you: </span>
-            <span></span>
-        </div>
-        <div>
-            <span class="bold">Last Log In Time:</span>
-            <span>{{userProfile.lastLoggedInDateTime}}</span>
+            <span class="bold">Last Logged In:</span>
+            <span>{{userProfile.lastLoggedIn | date: 'medium'}}</span>
         </div>
     </div>
 </div>

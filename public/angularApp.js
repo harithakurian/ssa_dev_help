@@ -3,6 +3,14 @@
 
 var app = angular.module("ssadevhelp", ["ngRoute"]);
 
+function chunk(arr, size) {
+    var newArr = [];
+    for (var i=0; i<arr.length; i+=size) {
+        newArr.push(arr.slice(i, i+size));
+    }
+    return newArr;
+}
+
 app.config(function ($routeProvider) {
     $routeProvider.when("/ViewAllQuestions", {
         templateUrl: "static/Templates/viewAllQuestions.html"
@@ -21,27 +29,42 @@ app.config(function ($routeProvider) {
     });
 });
 
-app.controller('SSADevHelpCtrl', function ($scope, $http) {
-    $scope.login = function () {
-        var userObj = {
-            "userName": $scope.userName,
-            "password": $scope.password,
-            "lastVisitDateTime": new Date()
-        };
-        $http.post("/login/", userObj, { cache: false }).then(function (response) {
-            $scope.$root.currentUser = response.data;
-           // alert($scope.$root.currentUser);
-            location = location.origin + "/";
-        }, function (error) {
-            $scope.errMsg = "Incorrect userName/password."
-        });
+app.controller('SSADevHelpCtrl', function ($scope, $http, $q) {
+        $scope.login2 = function () {
+            var userObj = {
+                "userName": $scope.userName,
+                "password": $scope.password
+            };
+            // $http.post("/login/", userObj, { cache: false }).then(function (response) {
+            //     $scope.$root.currentUser = response.data;
+            // // alert($scope.$root.currentUser);
+            //     location = location.origin + "/";
+            // }, function (error) {
+            //     $scope.errMsg = "Incorrect userName/password."
+            // });
+
+            $scope.login = $http.post("/login/", userObj, { cache: false });
+            $scope.updateUserLastLoggedIn = $http.post("/updateUserLastLoggedIn/", userObj, { cache: false });
+            $q.all([$scope.login, $scope.updateUserLastLoggedIn]).then(function (values) {
+                //console.log(values[0].data);
+                $scope.$root.currentUser = values[0].data;
+                $scope.successfulUpdate = values[1].data;
+                location = location.origin + "/";
+            }, function (err) {
+                console.log(err);
+                if (err) {
+                    $scope.errMsg = "Incorrect userName/password.";
+                    //location.reload();
+                    $q.reject(err);
+                }
+            });
     };
 
     $scope.registerUser = function () {
         var userObj = {
             userName: $scope.userName,
             password: $scope.password,
-            profileName: $scope.profileName
+            profileName: $scope.profileName,
         };
         $http.post("/insertUser/", userObj).then(function (response) {
             window.location = "/#/";
@@ -193,11 +216,16 @@ app.controller('insertQuestionController', function ($scope, $http)
     }      
 });
 
-app.controller('viewAllQuestionsController', function ($scope, $http, $routeParams, $rootScope) 
+app.controller('viewAllQuestionsController', function ($scope, $http, $routeParams, $rootScope, $location)
 {
     //var userName = $routeParams.userName;
     //$rootScope.user = userName;
+    $scope.letterLimit = 20;
+    $scope.go = function ( path ) {
+        $location.path( '/view-question/' + path );
+    };
     $http.get("/viewAllQuestions/", { cache: false }).then(function (response) {
+       // $scope.questions = chunk(response.data, 3);
         $scope.questions = response.data;
         //console.log(response.data);
     });     

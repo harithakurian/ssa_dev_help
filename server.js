@@ -52,23 +52,31 @@ app.post('/login/', function (req, res) {
             res.status(500).send("no user is found");
         } else {
             req.session.currentUser = {
-                userName: login.userName
+
+                userName: login.userName,
+                lastLoggedIn: results[0].lastLoggedIn
             };
+
             res.send(login.userName);
         }
     });
 });
 
-app.post('/logout/', function (req, res) {
-    db.updateUser({userName: req.session.currentUser.userName}, {lastLoggedInDateTime: new Date()}, function (err, isSuccess) {
+app.post('/updateUserLastLoggedIn/', function(req, res) {
+    db.updateUser({userName: req.body.userName}, {lastLoggedIn: new Date()}, function (err, isSuccess) {
         if (err) {
             res.status(500).send(err);
         }
         else {
-            req.session.destroy(function(err) {
-            res.redirect("/");
-            });
+            res.send(isSuccess);
         }
+    });
+});
+
+app.post('/logout/', function (req, res) {
+
+     req.session.destroy(function(err) {
+        res.redirect("/");
     });
 });
 
@@ -77,7 +85,7 @@ app.post('/insertUser/', function (req, res) {
         userName: req.body.userName,
         password: req.body.password,
         profileName: req.body.profileName,
-        lastLoggedInDateTime: new Date()
+        lastLoggedIn: new Date()
     };
 
     db.insertUser(user, (err, success) => {
@@ -156,16 +164,17 @@ app.get("/api/getNewAnswers", checkAuth, function (req, res) {
     });
 });
 
-app.post("/getUserProfileInfo/", function (req, res) {
-    var userName = {userName: req.body.userName};
-    db.getUserProfileInfo(userName, (err, result) => {
-        if (err || result.length !== 1) {
-            res.status(500).send("User is not found in the system!");
-        } else {
-                res.json(result);
-            };
-        });
-    });
+ app.post("/getUserProfileInfo/", function (req, res) {
+     var userName = {userName: req.body.userName};
+     db.getUserProfileInfo(userName, (err, result) => {
+         if (err || result.length !== 1) {
+             res.status(500).send("User is not found in the system!");
+         } else {
+                 result[0].lastLoggedIn = req.session.currentUser.lastLoggedIn;
+                 res.json(result);
+             };
+         });
+     });
 
 app.get('/api/getQuestion/:questionId', function (req, res) {
     var filter = {
@@ -207,7 +216,7 @@ app.get('/getQuestions/:userName?', function (req, res) {
         if (err) {
             res.status(500).send(err);
         } else {
-            console.log(results);
+            //console.log(results);
             res.json(results);
         }
     })
@@ -222,7 +231,7 @@ app.get('/viewAllQuestions/', function (req, res) {
         if (err) {
             res.status(500).send(err);
         } else {
-            console.log(results);
+            //console.log(results);
             res.json(results);
         }
     })
@@ -258,7 +267,7 @@ app.post('/updateQuestion/', function (req, res) {
         if (err) {
             res.status(500).send(err);
         } else {
-            console.log("Update Question user Name is: " + req.session.currentUser.userName);
+            //console.log("Update Question user Name is: " + req.session.currentUser.userName);
             res.send(req.session.currentUser.userName);
         }
     });
@@ -292,7 +301,7 @@ app.post("/api/updateQuestionLastAnsweredDate", checkAuth, function (req, res) {
 
 app.post('/api/searchQuestions/', function (req, res) {
     var filter = {
-         title: { $regex : req.body.title }
+         title: {$regex : new RegExp(req.body.title.toLowerCase(), "i")}
     };    
     db.findQuestions(filter, function(err, results) {
         if (err) {
@@ -312,13 +321,13 @@ app.get('/register', function (req, res) {
 });
 
 // Initialize connection once
-MongoClient.connect("mongodb://localhost:27017/ssa-dev-help-db", function (err, database) {
+MongoClient.connect("mongodb://PC93:27017/ssa-dev-help-db", function (err, database) {
     if (err) {
         throw err;
     }
 
-    var obj = require("./db");
-    db = new obj(database);
+    var mod = require('./db');
+    db = new mod(database);
 
     // Start the application after the database connection is ready
     app.listen(8080);
