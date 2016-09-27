@@ -2,11 +2,10 @@
     <form ng-submit="insertQuestion()">
         <input type="text" placeholder="Title" class="form-control" ng-required="required" ng-model="title">
         <label for="question">Question:</label>
-        <textarea class="form-control" rows="10" id="question" ng-required="required" ng-model="content"></textarea>
+        <textarea  ui-tinymce class="form-control" rows="10" id="question" ng-required="required" ng-model="content"></textarea>
         <br/>
         <center>
             <button class="btn btn-primary btn-large"><i class="glyphicon glyphicon-ok-sign"></i> Submit Question</button>
         </center>
     </form>
-    <div id="insertResult" />
 </div>

@@ -9,7 +9,7 @@
                         </div>
                 </div>
                     <div><span class="bold">Title:</span>{{question.title}}</div>
-                    <div><span class="bold">Question:</span> {{question.content}}</div>
+                    <div><span class="bold">Question:</span> <div style="text-align: center;" ng-bind-html ="question.content"></div></div>
                     <div><span class="bold">Date:</span> {{question.dateTime | date:'medium'}}</div>
 
              </div>
@@ -24,7 +24,7 @@
         <div>
             <span class="glyphicon glyphicon-check" aria-hidden="true" ></span>
             <b>Accepted Answer</b></div>
-        <div><span class="bold">Answer:</span> {{answer.content}}</div>
+        <div><span class="bold">Answer:</span> <div style="text-align: center;" ng-bind-html ="answer.content"></div></div>
         <div>
             <span class="bold">Date:</span> {{answer.dateTime | date:'medium'}}
             <span class="bold">By:</span> {{answer.userName}}
@@ -43,7 +43,7 @@
                 <div class="col-md-4"></div>
                 <div class="col-md-4 other-answer">
 
-                    <div><span class="bold">Answer:</span> {{answer.content}}</div>
+                    <div><span class="bold">Answer:</span> <div style="text-align: center" ng-bind-html ="answer.content"></div></div>
                     <div>
                         <span class="bold">Date:</span> {{answer.dateTime | date:'medium'}}
                         <span class="bold">By:</span> {{answer.userName}}
@@ -64,7 +64,7 @@
         <div class="col-md-8 answer-question">
             <form ng-submit="insertAnswer()">
                 <label for="answer"><b>Answer This Question:</b></label>
-                <textarea class="form-control border-box" rows="7" id="answer" ng-required="required" ng-model="answer"></textarea>
+                <textarea ui-tinymce class="form-control border-box" rows="7" id="answer" ng-required="required" ng-model="answer"></textarea>
                 <br/>
 
                 <button class="btn btn-primary btn-large"><i class="glyphicon glyphicon-ok-sign"></i> Submit Answer</button>
