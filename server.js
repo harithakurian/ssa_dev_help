@@ -395,17 +395,17 @@ io.on('connection', function(socket) {
     }, 1000);
 });
 
+var serverObj = http.listen(8080, function () {
+    console.log('Listening on port 8080...');
 
-// Initialize connection once
-MongoClient.connect("mongodb://PC93:27017/ssa-dev-help-db", function (err, database) {
+    MongoClient.connect("mongodb://PC93:27017/ssa-dev-help-db", function (err, database) {
     if (err) {
         throw err;
     }
 
     var mod = require('./db');
-    db = new mod(database);
-
-    // Start the application after the database connection is ready
-    http.listen(8080);
-    console.log("Listening on port 8080");
+    db = new mod(database);    
+    });
 });
+
+module.exports = serverObj;
