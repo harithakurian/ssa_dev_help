@@ -146,8 +146,10 @@ app.controller('getQuestionsController', function ($scope, $http, $routeParams)
     });     
 });
 
-app.controller('getQuestionController', function ($scope, $http, $routeParams, $q, $rootScope) 
-{ 
+app.controller('getQuestionController', function ($scope, $http, $routeParams, $q, $rootScope)
+{
+
+
 
     $http.get("/getSessionUser/").then(function (response) {
         //alert("Get Session User is " + response.data);

@@ -1,5 +1,8 @@
 /* Owl Carousel Bootstrap Custom CSS */
-body.index { padding-top: 70px; }
+body.index {
+	padding-top: 70px;
+	background: url(../img//main-bg.jpg) fixed no-repeat center center;
+}
 div.question {
 	margin-top: 2px;
 	margin-bottom: 2px;
