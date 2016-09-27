@@ -47,8 +47,8 @@ describe('SSA DEV HELP DB tests', function () {
 
     it('test if the user is valid', function(done) {
     var login = {
-        userName: 'Ram-2',
-        password: 'ram2',
+        userName: 'Ram-Ramstein',
+        password: 'ramstein',
     };
 
         db.findUsers(login,function(err, results){ 
