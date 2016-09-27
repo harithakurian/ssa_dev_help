@@ -51,16 +51,21 @@ describe('SSA DEV HELP DB tests', function () {
         password: 'ram2',
     };
 
-    db.findUsers(login,function(err, results){ 
-        try{  
-            assert.equal(1, results.length);
-        }
-        catch(ex)
-        {
-            done(ex);
-            return;
-        }
-        done();
-        })
-    });      
+        db.findUsers(login,function(err, results){ 
+            try{  
+                assert.equal(1, results.length);
+            }
+            catch(ex)
+            {
+                done(ex);
+                return;
+            }
+            done();
+            })
+    });   
+
+    after(function(done) {
+            db.close();
+            done();
+    });   
 });

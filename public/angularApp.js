@@ -149,8 +149,10 @@ app.controller('getQuestionsController', function ($scope, $http, $routeParams)
     });     
 });
 
-app.controller('getQuestionController', function ($scope, $http, $routeParams, $q, $rootScope) 
-{ 
+app.controller('getQuestionController', function ($scope, $http, $routeParams, $q, $rootScope)
+{
+
+
 
     $http.get("/getSessionUser/").then(function (response) {
         //alert("Get Session User is " + response.data);
@@ -209,6 +211,23 @@ app.controller('getQuestionController', function ($scope, $http, $routeParams, $
             alert(err.data)
         });
     }
+
+    $scope.deselectAnswer = function (questionId, answerId) {
+        var question = {
+            questionId: questionId,
+            answerId: null
+        };
+        $http.post("/updateQuestion/", question).then(function (response) {
+            //$scope.$root.user = response.data;
+            //alert("Root current User is: " + response.data);
+            //$rootScope.user = response.data;
+            //window.location = "/#/view-question/"+questionId;
+            location.reload(true);
+        }, function(err) {
+            alert(err.data)
+        });
+    }
+
 });
 
 app.controller('insertQuestionController', function ($scope, $http) 

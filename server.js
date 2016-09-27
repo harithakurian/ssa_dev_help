@@ -287,7 +287,11 @@ app.post('/insertQuestion/', function (req, res) {
 });
 
 app.post('/updateQuestion/', function (req, res) {
-    db.updateQuestion({_id: new mongo.ObjectId(req.body.questionId)}, {bestAnswerId: new mongo.ObjectId(req.body.answerId)}, 
+    var bestAnswerId = null;
+    if (req.body.answerId != null) {
+        bestAnswerId = new mongo.ObjectId(req.body.answerId);
+    }
+    db.updateQuestion({_id: new mongo.ObjectId(req.body.questionId)}, {bestAnswerId: bestAnswerId}, 
     function (err, isSuccess) {
         if (err) {
             res.status(500).send(err);
