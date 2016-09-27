@@ -29,9 +29,9 @@
     <ul class="nav navbar-right">
       <li>
         <span ng-if="newAnswerCount > 0">
-          <!--<a href="#" data-toggle="modal" data-target="#myModal">!!!</a>-->
-          <a href="/#/updated-questions/">!!!</a>
+          <a class="glyphicon glyphicon-exclamation-sign" href="/#/updated-questions/">{{newAnswerCount}}</a>
         </span>
+        <span class="glyphicon glyphicon-user"><a ng-href="/#/user/{{user.userName}}">Welcome, {{user.profileName}}!</a></span>
         <button type="submit" class="btn-xs" ng-click="logout()">Logout</button>
       </li>
     </ul>
@@ -39,22 +39,5 @@
 
   <!-- /.navbar-collapse -->
 </nav>
-
-  <!--<div modal="showModal"  class="modal fade" model="myModal" id="myModal" role="dialog">
-    <div class="modal-dialog modal-sm">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">There is {{newAnswerCount}} new answer(s) posted to your question(s)</h4>
-        </div>
-        <div class="modal-body">
-          <div ng-repeat="question in newAnswers"><a href="#" ng-click="go(myModal, question._id)">{{question._id}}</a></div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" id="closeModal" data-dismiss="modal">Close</button>
-        </div>
-      </div>
-    </div>
-  </div>-->
 
 </div>
