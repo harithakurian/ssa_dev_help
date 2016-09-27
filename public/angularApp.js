@@ -82,17 +82,20 @@ app.controller('NavController', function ($scope, $location, $http, $interval) {
         return viewLocation === $location.path();
     };
 
+    $scope.newAnswerCount = 0;
+
     $http.get("/api/getUserInfo").then((res) => {
         $scope.user = res.data;
+        socket.emit('connect-request', $scope.user.userName);
     });
+    
+    var socket = io();
 
-    $scope.newAnswerCount = 0;
-    $interval(() => {
-        $http.get("/api/getNewAnswers").then((res) => {
-            $scope.$root.newAnswers = res.data;
-            $scope.newAnswerCount = res.data.length;
-        });
-    }, 1000);
+    socket.on("new-answered-questions", function (questionList) {
+        $scope.newAnswerCount = questionList.length;
+        $scope.$root.newAnswers = questionList;
+        $scope.$apply();
+    });
 
     $scope.go = function (modal, questionId) {
         //$location.path("/view-question/" + questionId);
