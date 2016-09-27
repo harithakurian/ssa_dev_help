@@ -18,6 +18,8 @@ app.config(function ($routeProvider) {
         templateUrl: "static/Templates/insertQuestion.html"
     }).when("/view-question/:questionId", {
         templateUrl: "static/Templates/view-question.html"
+    }).when("/updated-questions", {
+        templateUrl: "static/Templates/view-new-answered-questions.html"
     }).when("/user/:userName?", {
         templateUrl: "static/Templates/user.html"
     }).when("/", {
@@ -91,6 +93,13 @@ app.controller('NavController', function ($scope, $location, $http, $interval) {
             $scope.newAnswerCount = res.data.length;
         });
     }, 1000);
+
+    $scope.go = function (modal, questionId) {
+        //$location.path("/view-question/" + questionId);
+        //$("#closeModal").trigger("click");
+        $scope.showModal = false;
+        // window.location = "/#/view-question/" + questionId;
+    }
 
     $scope.logout = function (){
         $http.post("/logout/").then(function (response){
@@ -231,13 +240,21 @@ app.controller('viewAllQuestionsController', function ($scope, $http, $routePara
     });     
 });
 
-app.controller('viewUserProfileController', function ($scope, $http, $routeParams) 
+app.controller('viewUserProfileController', function ($scope, $http, $routeParams, $q) 
 {
-        var userProfile = {userName: $routeParams.userName};
-        $http.post('/getUserProfileInfo/', userProfile, { cache: false }).then(function (response){
-        $scope.profile = response.data;
-        //alert("$scope.profile is " + $scope.profile);
-        console.log($scope.profile);
+        var username = {userName: $routeParams.userName};
+        $scope.userProfile = $http.post("/getUserProfileInfo/", username, { cache: false });
+        $scope.numberOfQuestions = $http.post("/getNumberOfQuestions/", username, { cache: false });
+        $scope.numberOfAnswers = $http.post("/getNumberOfAnswers/", username, { cache: false });
+        $q.all([$scope.userProfile, $scope.numberOfQuestions, $scope.numberOfAnswers]).then(function (values){
+        $scope.profile = values[0].data;
+        $scope.questionCount = values[1].data;
+        $scope.answerCount = values[2].data;
+    }, function (err) {
+        if (err) {
+            console.log("Getting user profile failed!");
+            $q.reject(err);
+        }
     });
 });
 

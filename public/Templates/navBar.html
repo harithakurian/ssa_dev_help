@@ -1,4 +1,5 @@
-<nav class="navbar-default navbar navbar-fixed-top" ng-controller="NavController">
+<div ng-controller="NavController">
+<nav class="navbar-default navbar navbar-fixed-top">
 
   <!-- Brand and toggle get grouped for better mobile display -->
   <div class="navbar-header">
@@ -28,12 +29,33 @@
     </ul>
     <ul class="nav navbar-right">
       <li>
-        <div><button type="submit" class="btn-xs" ng-click="logout()">Logout</button></div>
-        <div ng-if="newAnswerCount > 0">{{newAnswerCount}}</div>
+        <span ng-if="newAnswerCount > 0">
+          <!--<a href="#" data-toggle="modal" data-target="#myModal">!!!</a>-->
+          <a href="/#/updated-questions/">!!!</a>
+        </span>
+        <button type="submit" class="btn-xs" ng-click="logout()">Logout</button>
       </li>
     </ul>
-  </div>
   </div>
 
   <!-- /.navbar-collapse -->
 </nav>
+
+  <!--<div modal="showModal"  class="modal fade" model="myModal" id="myModal" role="dialog">
+    <div class="modal-dialog modal-sm">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">There is {{newAnswerCount}} new answer(s) posted to your question(s)</h4>
+        </div>
+        <div class="modal-body">
+          <div ng-repeat="question in newAnswers"><a href="#" ng-click="go(myModal, question._id)">{{question._id}}</a></div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" id="closeModal" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>-->
+
+</div>
