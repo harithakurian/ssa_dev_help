@@ -349,49 +349,60 @@ app.get('/register', function (req, res) {
     res.sendFile(__dirname + '/register.html');
 });
 
-var connectedUsers = [];
-io.on('connection', function(socket) {  
-    
-    socket.on('connect-request', function(userName) {
-        var newUser = {
+var connectedUsers = new Object();
+io.on("connection", function (socket) {
+    var waitTime = 1000;
+    var monitorVar;
+
+    socket.on("initial", function (userName) {
+        socket.userName = userName;
+        var user = {
             socketId: socket.id,
-            userName: userName,
-            lastQuestionList: 0
+            lastNotifiedNumber: -1
+        };
+        connectedUsers[userName] = user;
+
+        if (connectedUsers.numberOfUser) {
+            connectedUsers.numberOfUser++;
+        } else {
+            connectedUsers.numberOfUser = 1;
         }
 
-        for (var user of connectedUsers) {
-           if (user.userName === userName) {
-               var index = connectedUsers.indexOf(user);
-               if (index > -1) {
-                   connectedUsers.splice(index, 1);
-               }
-           }
+        monitorVar = setTimeout(monitor, waitTime);
+        //console.log("connected users: ", connectedUsers);
+    });
+
+    socket.on("disconnect", function () {
+        if (connectedUsers[socket.userName]) {
+            delete(connectedUsers[socket.userName]);
+            connectedUsers.numberOfUser--;
+            clearTimeout(monitorVar);
+            //console.log("Disconnected user: ", socket.userName);
+            //console.log("connected users: ", connectedUsers);
         }
-
-        connectedUsers.push(newUser);
-        console.log("connecting users", connectedUsers);
     });
 
-    socket.on('disconnect', function() {
-    });
-
-    setInterval(() => {
-        var i = 0;
-        for (i = 0; i < connectedUsers.length; i++) {
-            var user = connectedUsers[i];
-            db.findQuestions({$and: [{userName: user.userName}, { $where: "this.lastAccessedDate < this.lastAnsweredDate" }]}, (err, docs) => {
+    function monitor () {
+        if (connectedUsers.numberOfUser && connectedUsers.numberOfUser > 0) {
+            db.findQuestions({ $and: [ { userName : socket.userName }, { $where: "this.lastAccessedDate < this.lastAnsweredDate" } ] }, function (err, docs) {
                 if (docs) {
-                    if (docs.length > 0 && docs[0].userName === user.userName && user.lastQuestionList !== docs.length) {
-                        user.lastQuestionList = docs.length;
-                        socket.broadcast.to(user.socketId).emit('new-answered-questions', docs);
-                    } else if (docs.length === 0 && user.lastQuestionList > 0) {
-                        user.lastQuestionList = 0;
-                        socket.broadcast.to(user.socketId).emit('new-answered-questions', docs);
+                    var user = connectedUsers[socket.userName];
+                    if (docs.length != user.lastNotifiedNumber) {
+                        if (user.lastNotifiedNumber === 0 && docs.length === 0) {
+                            socket.emit("new-answered-questions", []);
+                            user.lastNotifiedNumber = -1;
+                        } else if (user.lastNotifiedNumber === -1 && docs.length === 0) {
+                            //console.log("ignore this scenario");
+                        } else {
+                            socket.emit("new-answered-questions", docs);
+                            user.lastNotifiedNumber = docs.length;
+                        }
                     }
                 }
             });
         }
-    }, 1000);
+        monitorVar = setTimeout(monitor, waitTime);
+    }
 });
 
 var serverObj = http.listen(8080, function () {

@@ -82,16 +82,16 @@ app.controller('NavController', function ($scope, $location, $http, $interval) {
         return viewLocation === $location.path();
     };
 
+    var socket = io();
     $scope.newAnswerCount = 0;
 
     $http.get("/api/getUserInfo").then((res) => {
         $scope.user = res.data;
-        socket.emit('connect-request', $scope.user.userName);
+        socket.emit('initial', $scope.user.userName);
     });
-    
-    var socket = io();
 
     socket.on("new-answered-questions", function (questionList) {
+        //console.log(questionList);
         $scope.newAnswerCount = questionList.length;
         $scope.$root.newAnswers = questionList;
         $scope.$apply();

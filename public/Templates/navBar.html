@@ -30,7 +30,7 @@
     <ul class="nav navbar-right">
       <li>
         <span ng-if="newAnswerCount > 0">
-          <a class="glyphicon glyphicon-exclamation-sign" href="/#/updated-questions/">{{newAnswerCount}}</a>
+          <a class="glyphicon glyphicon-exclamation-sign" href="/#/updated-questions/" title="There is new answer(s) to {{newAnswerCount}} of your questions!">{{newAnswerCount}}</a>
         </span>
         <span class="glyphicon glyphicon-user"><a ng-href="/#/user/{{user.userName}}">Welcome, {{user.profileName}}!</a></span>
         <button type="submit" class="btn-xs" ng-click="logout()">Logout</button>
