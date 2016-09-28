@@ -1,9 +1,10 @@
 {
-  "name": "instascam",
+  "name": "ssaDevHelp",
   "version": "1.0.0",
   "description": "",
   "main": "server.js",
   "dependencies": {
+    "angular-ui-tinymce": "0.0.16",
     "assert": "^1.4.1",
     "body-parser": "^1.15.2",
     "chai": "^3.5.0",
@@ -15,7 +16,8 @@
     "mkdirp": "^0.5.1",
     "mocha": "^3.0.2",
     "mongodb": "^2.2.10",
-    "socket.io": "^1.4.8"
+    "socket.io": "^1.4.8",
+    "supertest": "^2.0.0"
   },
   "devDependencies": {
     "babel": "^6.5.2",
@@ -32,12 +34,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ssgtob1/InstaScam.git"
+    "url": "git+https://github.com/ramsahota/ssa_dev_help.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/ssgtob1/InstaScam/issues"
+    "url": "https://github.com/ramsahota/ssa_dev_help"
   },
-  "homepage": "https://github.com/ssgtob1/InstaScam#readme"
+  "homepage": "https://github.com/ramsahota/ssa_dev_help#readme"
 }

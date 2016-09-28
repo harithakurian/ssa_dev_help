@@ -4,6 +4,19 @@ body.index {
 	padding-top: 70px;
 	/*background: url(../img//main-bg.jpg) fixed no-repeat center center;*/
 }
+
+div.userProfile{
+	margin-top: 2px;
+	margin-bottom: 2px;
+	margin-right: 2px;
+	margin-left: 2px;
+	text-align: left;
+	background-color: #ebebe0;
+	border:2px solid #ebebe0;
+	transition: border .25s linear, color .25s linear, background-color .25s linear;
+	border-radius: 6px;
+	font-size: 16px;
+}
 div.question {
 	margin-top: 2px;
 	margin-bottom: 2px;
