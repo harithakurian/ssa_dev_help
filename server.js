@@ -11,10 +11,6 @@ var mongo = require('mongodb');
 var MongoClient = mongo.MongoClient;
 var db;
 
-var multer = require('multer'),
-    bodyParser = require('body-parser'),
-    path = require('path');
-
 var fs = require('fs-extra');
 
 var session = require('express-session');
