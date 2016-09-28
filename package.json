@@ -1,5 +1,5 @@
 {
-  "name": "instascam",
+  "name": "ssaDevHelp",
   "version": "1.0.0",
   "description": "",
   "main": "server.js",
@@ -34,12 +34,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ssgtob1/InstaScam.git"
+    "url": "git+https://github.com/ramsahota/ssa_dev_help.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/ssgtob1/InstaScam/issues"
+    "url": "https://github.com/ramsahota/ssa_dev_help"
   },
-  "homepage": "https://github.com/ssgtob1/InstaScam#readme"
+  "homepage": "https://github.com/ramsahota/ssa_dev_help#readme"
 }
