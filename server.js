@@ -306,7 +306,7 @@ app.post("/api/updateQuestionLastAccessedDate", checkAuth, function (req, res) {
         if (err) {
             res.status(500).send(err);
         } else {
-            console.log("Update Question user Name is: " + req.session.currentUser.userName);
+            //console.log("Update Question user Name is: " + req.session.currentUser.userName);
             res.send(req.session.currentUser.userName);
         }
     });
@@ -318,7 +318,7 @@ app.post("/api/updateQuestionLastAnsweredDate", checkAuth, function (req, res) {
         if (err) {
             res.status(500).send(err);
         } else {
-            console.log("Update Question user Name is: " + req.session.currentUser.userName);
+            //console.log("Update Question user Name is: " + req.session.currentUser.userName);
             res.send(req.session.currentUser.userName);
         }
     });
