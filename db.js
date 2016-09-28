@@ -78,11 +78,11 @@ module.exports = function (db) {
     this.insertAnswer = function(answer, callback){
         answersCollection.insert(answer, function(err, result){
             if(err){
-                callback(err,false);
+                callback(err, null);
             }
             else
             {
-                console.log("Inserted answer :", result);
+                //console.log("Inserted answer :", result);
                 callback(null, result);
             }
         })
@@ -106,10 +106,10 @@ module.exports = function (db) {
     this.insertQuestion = function (question, callback) {
         questionsCollection.insert(question, function (err, result) {
             if (err) {
-                callback(err, false);
+                callback(err, null);
             } else {
-                console.log('Inserted Questions with:', result);
-                callback(null, true);
+                //console.log('Inserted Questions with:', result);
+                callback(null, result);
             }
         });
     }

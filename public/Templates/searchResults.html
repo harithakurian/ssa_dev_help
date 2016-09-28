@@ -1,9 +1,9 @@
 <div>
     <div ng-if="$root.searchResults.length != 0" class="result" ng-repeat="result in $root.searchResults">
-        <div><span class="bold">Title:</span> <a href="/#/view-question/{{question._id}}">{{result.title}}</a></div>
+        <div><span class="bold">Title:</span> <a href="/#/view-question/{{result._id}}" style="color: blue; text-decoration: underline;">{{result.title}}</a></div>
         <div><span class="bold">Question:</span> {{result.content}}</div>
         <div><span class="bold">Date:</span> {{result.dateTime}}</div>
-        <div><span class="bold">Asked by:</span> <a href="/#/user/{{question.userName}}">{{result.userName}}</a></div>
+        <div><span class="bold">Asked by:</span> <a href="/#/user/{{result.userName}}" style="color: blue; text-decoration: underline;">{{result.userName}}</a></div>
         <br/>
     </div>
 

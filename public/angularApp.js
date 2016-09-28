@@ -196,8 +196,12 @@ app.controller('getQuestionController', function ($scope, $http, $routeParams, $
         var postAnswer = $http.post("/api/postAnswer/", answer);
         var updateQuestionLastAnsweredDate = $http.post("/api/updateQuestionLastAnsweredDate", {questionId: questionId, updatedKeyValue : { lastAnsweredDate: new Date() } });
 
-        $q.all([postAnswer, updateQuestionLastAnsweredDate]).then((success) => {
-            location.reload();
+        $q.all([postAnswer, updateQuestionLastAnsweredDate]).then((response) => {
+            //location.reload();
+            var answer = response[0].data.ops[0];
+            answer.content = $sce.trustAsHtml(answer.content);
+            $scope.answers.push(answer);
+            //$scope.$apply();
         }, (error) => {
             alert(error.data);
         });
@@ -209,10 +213,6 @@ app.controller('getQuestionController', function ($scope, $http, $routeParams, $
             answerId: answerId
         };
         $http.post("/updateQuestion/", question).then(function (response) {
-            //$scope.$root.user = response.data;
-            //alert("Root current User is: " + response.data);
-            //$rootScope.user = response.data;
-            //window.location = "/#/view-question/"+questionId;
             location.reload(true);
         }, function(err) {
             alert(err.data)
@@ -225,10 +225,6 @@ app.controller('getQuestionController', function ($scope, $http, $routeParams, $
             answerId: null
         };
         $http.post("/updateQuestion/", question).then(function (response) {
-            //$scope.$root.user = response.data;
-            //alert("Root current User is: " + response.data);
-            //$rootScope.user = response.data;
-            //window.location = "/#/view-question/"+questionId;
             location.reload(true);
         }, function(err) {
             alert(err.data)
@@ -237,7 +233,7 @@ app.controller('getQuestionController', function ($scope, $http, $routeParams, $
 
 });
 
-app.controller('insertQuestionController', function ($scope, $http) 
+app.controller('insertQuestionController', function ($scope, $http, $location) 
 { 
     $scope.required = true;
     $scope.insertQuestion = function () {
@@ -246,7 +242,7 @@ app.controller('insertQuestionController', function ($scope, $http)
             content: $scope.content
         };
         $http.post("/insertQuestion/", question).then(function (response) {
-            window.location = "/#/";
+            $location.path("/view-question/" + response.data.insertedIds[0]);
         }, function (error) {
             console.log(error);
             alert(error.data.errmsg);
