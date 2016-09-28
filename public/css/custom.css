@@ -22,7 +22,7 @@ div.question {
 	margin-bottom: 2px;
 	margin-right: 2px;
 	margin-left: 2px;
-	text-align: center;
+	text-align: left;
 	background-color: #ebebe0;
 	border:2px solid #ebebe0;
 	transition: border .25s linear, color .25s linear, background-color .25s linear;
@@ -33,18 +33,31 @@ div.question:hover{
 	background-color: #48c9b0;
 }
 div.best-answer {
-	text-align: center;
+	text-align: left;
 	border:2px solid #48c9b0;
 	background-color: #48c9b0;
 	transition: border .25s linear, color .25s linear, background-color .25s linear;
 	border-radius: 6px;
 }
 div.other-answer {
-	text-align: center;
+	text-align: left;
 	background-color: #CCC;
 	border:2px solid #bdc3c7;
 	transition: border .25s linear, color .25s linear, background-color .25s linear;
 	border-radius: 6px;
+}
+div.button-center{
+    text-align: center;
+}
+div.answerDiv{
+    text-align: left;
+    background-color: #FFFFFF;
+    border:2px solid #7b8a8b;
+    transition: border .25s linear, color .25s linear, background-color .25s linear;
+    border-radius: 6px;
+}
+div.ng-binding{
+    text-align: left;
 }
 /* Header Navigation */
 #top-nav{

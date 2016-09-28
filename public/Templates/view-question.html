@@ -1,15 +1,15 @@
 <div ng-controller="getQuestionController">
     <div class="container">
         <div class="row">
-            <div class="col-md-4"></div>
-                <div class="col-md-4 question">
+            <div class="col-md-1"></div>
+                <div class="col-md-10 question">
                     <div ng-if="question.bestAnswerId">
                         <div class="alert alert-info fade in">
                         <span class="glyphicon glyphicon-check" aria-hidden="true" ></span><b>This question has an accepted answer</b>
                         </div>
                 </div>
                     <div><span class="bold">Title:</span>{{question.title}}</div>
-                    <div><span class="bold">Question:</span> <div style="text-align: center;" ng-bind-html ="question.content"></div></div>
+                    <div ><span class="bold">Question:</span> <div class="answerDiv" ng-bind-html="question.content"></div></div>
                     <div><span class="bold">Date:</span> {{question.dateTime | date:'medium'}}</div>
 
              </div>
@@ -19,19 +19,22 @@
     <div ng-if="question.bestAnswerId == answer._id"  ng-repeat="answer in answers">
         <div class="container">
             <div class="row">
-                <div class="col-md-4"></div>
-                <div class="col-md-4 best-answer">
+                <div class="col-md-1"></div>
+                <div class="col-md-10 best-answer">
         <div>
             <span class="glyphicon glyphicon-check" aria-hidden="true" ></span>
             <b>Accepted Answer</b></div>
-        <div><span class="bold">Answer:</span> <div style="text-align: center;" ng-bind-html ="answer.content"></div></div>
+        <div><span class="bold">Answer:</span> <div class="answerDiv"  ng-bind-html ="answer.content"></div></div>
         <div>
             <span class="bold">Date:</span> {{answer.dateTime | date:'medium'}}
             <span class="bold">By:</span> {{answer.userName}}
         </div>
+
         <div ng-if="question.userName == user">
+            <div class="button-center">
                 <button ng-click="deselectAnswer(question._id, answer._id)" class="btn btn-info btn-large ">
-                <i class="glyphicon glyphicon-thumbs-down"></i> Deselect Best Answer</button></div> 
+                <i class="glyphicon glyphicon-thumbs-down"></i> Deselect Best Answer</button></div>
+            </div>
         </div>
     </div>
 </div>
@@ -40,19 +43,20 @@
     <div ng-if="question.bestAnswerId != answer._id"  ng-repeat="answer in answers">
         <div class="container">
             <div class="row">
-                <div class="col-md-4"></div>
-                <div class="col-md-4 other-answer">
+                <div class="col-md-1"></div>
+                <div class="col-md-10 other-answer">
 
-                    <div><span class="bold">Answer:</span> <div style="text-align: center" ng-bind-html ="answer.content"></div></div>
+                    <div><span class="bold">Answer:</span> <div class="answerDiv"   ng-bind-html ="answer.content"></div></div>
                     <div>
                         <span class="bold">Date:</span> {{answer.dateTime | date:'medium'}}
                         <span class="bold">By:</span> {{answer.userName}}
                     </div>
 
                      <div ng-if="question.userName == user">
+                         <div class="button-center">
                          <button ng-click="acceptAnswer(question._id, answer._id)" class="btn btn-primary btn-large">
                              <i class="glyphicon glyphicon-thumbs-up"></i> Best Answer</button></div>
-
+                        </div>
     </div>
                 </div>
             </div>
