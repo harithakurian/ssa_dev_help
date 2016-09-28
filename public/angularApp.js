@@ -1,7 +1,7 @@
 //angular stuffs
 
 
-var app = angular.module("ssadevhelp", ["ngRoute"]);
+var app = angular.module("ssadevhelp", ["ngRoute", 'ui.tinymce']);
 
 function chunk(arr, size) {
     var newArr = [];
@@ -82,17 +82,20 @@ app.controller('NavController', function ($scope, $location, $http, $interval) {
         return viewLocation === $location.path();
     };
 
+    $scope.newAnswerCount = 0;
+
     $http.get("/api/getUserInfo").then((res) => {
         $scope.user = res.data;
+        socket.emit('connect-request', $scope.user.userName);
     });
+    
+    var socket = io();
 
-    $scope.newAnswerCount = 0;
-    $interval(() => {
-        $http.get("/api/getNewAnswers").then((res) => {
-            $scope.$root.newAnswers = res.data;
-            $scope.newAnswerCount = res.data.length;
-        });
-    }, 1000);
+    socket.on("new-answered-questions", function (questionList) {
+        $scope.newAnswerCount = questionList.length;
+        $scope.$root.newAnswers = questionList;
+        $scope.$apply();
+    });
 
     $scope.go = function (modal, questionId) {
         //$location.path("/view-question/" + questionId);
@@ -120,7 +123,7 @@ app.controller('NavController', function ($scope, $location, $http, $interval) {
     }
 });
 
-app.controller('getQuestionsController', function ($scope, $http, $routeParams) 
+app.controller('getQuestionsController', function ($scope, $http, $routeParams, $sce) 
 {
     $scope.$on('ngRepeatFinished', function(ngRepeatFinishedEvent) {
         $("#questions").owlCarousel({
@@ -142,11 +145,14 @@ app.controller('getQuestionsController', function ($scope, $http, $routeParams)
         // location = location.origin + "/";
         //console.log($scope.userName);
         $scope.questions = response.data;
+        for (var question of $scope.questions) {
+            question.content = $sce.trustAsHtml(question.content);
+        }
         //console.log(response.data);
     });     
 });
 
-app.controller('getQuestionController', function ($scope, $http, $routeParams, $q, $rootScope)
+app.controller('getQuestionController', function ($scope, $http, $routeParams, $q, $rootScope, $sce)
 {
 
 
@@ -174,7 +180,11 @@ app.controller('getQuestionController', function ($scope, $http, $routeParams, $
 
     $q.all([$scope.questionGet, $scope.answerGet, updateQuestionLastAccessedDate]).then(function(values) {
         $scope.question = values[0].data;
+        $scope.question.content = $sce.trustAsHtml($scope.question.content);
         $scope.answers = values[1].data;
+        for (var answer of $scope.answers) {
+            answer.content = $sce.trustAsHtml(answer.content);
+        }
     });
 
     $scope.insertAnswer = function () {
@@ -241,7 +251,7 @@ app.controller('insertQuestionController', function ($scope, $http)
             console.log(error);
             alert(error.data.errmsg);
         });
-    }      
+    } 
 });
 
 app.controller('viewAllQuestionsController', function ($scope, $http, $routeParams, $rootScope, $location)

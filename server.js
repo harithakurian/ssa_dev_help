@@ -4,6 +4,9 @@ var express = require('express'),
     path = require('path'),
     mkdirp = require('mkdirp');
 
+var http = require('http').createServer(app);
+var io = require("socket.io")(http);
+
 var mongo = require('mongodb');
 var MongoClient = mongo.MongoClient;
 var db;
@@ -346,16 +349,62 @@ app.get('/register', function (req, res) {
     res.sendFile(__dirname + '/register.html');
 });
 
-// Initialize connection once
-MongoClient.connect("mongodb://PC93:27017/ssa-dev-help-db", function (err, database) {
+var connectedUsers = [];
+io.on('connection', function(socket) {  
+    
+    socket.on('connect-request', function(userName) {
+        var newUser = {
+            socketId: socket.id,
+            userName: userName,
+            lastQuestionList: 0
+        }
+
+        for (var user of connectedUsers) {
+           if (user.userName === userName) {
+               var index = connectedUsers.indexOf(user);
+               if (index > -1) {
+                   connectedUsers.splice(index, 1);
+               }
+           }
+        }
+
+        connectedUsers.push(newUser);
+        console.log("connecting users", connectedUsers);
+    });
+
+    socket.on('disconnect', function() {
+    });
+
+    setInterval(() => {
+        var i = 0;
+        for (i = 0; i < connectedUsers.length; i++) {
+            var user = connectedUsers[i];
+            db.findQuestions({$and: [{userName: user.userName}, { $where: "this.lastAccessedDate < this.lastAnsweredDate" }]}, (err, docs) => {
+                if (docs) {
+                    if (docs.length > 0 && docs[0].userName === user.userName && user.lastQuestionList !== docs.length) {
+                        user.lastQuestionList = docs.length;
+                        socket.broadcast.to(user.socketId).emit('new-answered-questions', docs);
+                    } else if (docs.length === 0 && user.lastQuestionList > 0) {
+                        user.lastQuestionList = 0;
+                        socket.broadcast.to(user.socketId).emit('new-answered-questions', docs);
+                    }
+                }
+            });
+        }
+    }, 1000);
+});
+
+var serverObj = http.listen(8080, function () {
+    console.log('Listening on port 8080...');
+
+    MongoClient.connect("mongodb://localhost:27017/ssa-dev-help-db", function (err, database) {
     if (err) {
         throw err;
     }
 
     var mod = require('./db');
-    db = new mod(database);
-
-    // Start the application after the database connection is ready
-    app.listen(8080);
-    console.log("Listening on port 8080");
+    db = new mod(database);    
+    });
 });
+
+module.exports = serverObj;
