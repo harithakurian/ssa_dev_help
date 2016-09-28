@@ -254,7 +254,7 @@ app.controller('insertQuestionController', function ($scope, $http)
     } 
 });
 
-app.controller('viewAllQuestionsController', function ($scope, $http, $routeParams, $rootScope, $location)
+app.controller('viewAllQuestionsController', function ($scope, $http, $routeParams, $rootScope, $location, $sce)
 {
     //var userName = $routeParams.userName;
     //$rootScope.user = userName;
@@ -265,6 +265,20 @@ app.controller('viewAllQuestionsController', function ($scope, $http, $routePara
     $http.get("/viewAllQuestions/", { cache: false }).then(function (response) {
        // $scope.questions = chunk(response.data, 3);
         $scope.questions = response.data;
+        for (var question of $scope.questions) {    
+            var s = question.content;
+            if (!s) {
+                s = '';
+            }
+            const charLimit = 20;
+            question.content = $sce.trustAsHtml(s);
+            if (s.length > charLimit) {
+                s = s.substring(0, charLimit) + '...';
+                question.content20 = $sce.trustAsHtml(s);
+            } else {
+                question.content20 = question.content;
+            }
+        }
         //console.log(response.data);
     });     
 });
