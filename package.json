@@ -4,6 +4,7 @@
   "description": "",
   "main": "server.js",
   "dependencies": {
+    "angular-ui-tinymce": "0.0.16",
     "assert": "^1.4.1",
     "body-parser": "^1.15.2",
     "chai": "^3.5.0",
@@ -15,8 +16,6 @@
     "mkdirp": "^0.5.1",
     "mocha": "^3.0.2",
     "mongodb": "^2.2.10"
-
-
   },
   "devDependencies": {
     "babel": "^6.5.2",
