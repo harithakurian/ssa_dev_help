@@ -107,12 +107,12 @@ app.post("/api/postAnswer/", function (req, res) {
         dateTime: req.body.dateTime
     }
     
-    db.insertAnswer(answer, (err,result) => {
+    db.insertAnswer(answer, (err, result) => {
         if (err) {
             console.log("Answer not inserted", err);
             res.status(500).send(err.errmsg);
         } else {
-            res.send(result);
+            res.json(result);
         }
     })
 });
@@ -271,12 +271,12 @@ app.post('/insertQuestion/', function (req, res) {
         lastAnsweredDate: null
     };
 
-    console.dir(question);
-    db.insertQuestion(question, (err, success) => {
+    //console.dir(question);
+    db.insertQuestion(question, (err, doc) => {
         if (err) {
             res.status(500).send(err);
         } else {
-            res.send("success");
+            res.json(doc);
     }
     // @TODO
     });
@@ -306,7 +306,7 @@ app.post("/api/updateQuestionLastAccessedDate", checkAuth, function (req, res) {
         if (err) {
             res.status(500).send(err);
         } else {
-            console.log("Update Question user Name is: " + req.session.currentUser.userName);
+            //console.log("Update Question user Name is: " + req.session.currentUser.userName);
             res.send(req.session.currentUser.userName);
         }
     });
@@ -318,7 +318,7 @@ app.post("/api/updateQuestionLastAnsweredDate", checkAuth, function (req, res) {
         if (err) {
             res.status(500).send(err);
         } else {
-            console.log("Update Question user Name is: " + req.session.currentUser.userName);
+            //console.log("Update Question user Name is: " + req.session.currentUser.userName);
             res.send(req.session.currentUser.userName);
         }
     });
