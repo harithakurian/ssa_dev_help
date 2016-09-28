@@ -11,10 +11,6 @@ var mongo = require('mongodb');
 var MongoClient = mongo.MongoClient;
 var db;
 
-var multer = require('multer'),
-    bodyParser = require('body-parser'),
-    path = require('path');
-
 var fs = require('fs-extra');
 
 var session = require('express-session');
@@ -408,7 +404,7 @@ io.on("connection", function (socket) {
 var serverObj = http.listen(8080, function () {
     console.log('Listening on port 8080...');
 
-    MongoClient.connect("mongodb://localhost:27017/ssa-dev-help-db", function (err, database) {
+    MongoClient.connect("mongodb://10.140.4.76:27017/ssa-dev-help-db", function (err, database) {
     if (err) {
         throw err;
     }

@@ -4,7 +4,6 @@
     <div id="questions" class="owl-carousel">
     <div class="question" ng-repeat="question in questions"  on-finish-render="ngRepeatFinished" >
             <div><span class="bold">Title:</span> <a href="/#/view-question/{{question._id}}">{{question.title}}</a></div>
-            <div><span class="bold">Question:</span> <div ng-bind-html ="question.content"></div></div>
             <div><span class="bold">Date:</span> {{question.dateTime| date:'medium'}}</div>
 
     </div>

@@ -9,7 +9,6 @@
 
                     <div><span class="bold">Title:</span> <a href="/#/view-question/{{question._id}}">{{question.title | limitTo : letterLimit }}
                         {{question.title.length > 20 ? '...' : ''}}</a></div>
-                    <div><span class="bold">Question:</span> {{question.content | limitTo : letterLimit }} {{question.content.length > 20 ? '...' : ''}}</div>
                     <div>
                         <span class="bold">Date:</span> {{question.dateTime | date:'medium'}}
                         <span class="bold">Asked by:</span> <a href="/#/user/{{question.userName}}">{{question.userName}}</a>
