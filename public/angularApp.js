@@ -18,6 +18,8 @@ app.config(function ($routeProvider) {
         templateUrl: "static/Templates/insertQuestion.html"
     }).when("/view-question/:questionId", {
         templateUrl: "static/Templates/view-question.html"
+    }).when("/edit/:questionOrAnswer/:id", {
+        templateUrl: "static/Templates/edit.html"
     }).when("/updated-questions", {
         templateUrl: "static/Templates/view-new-answered-questions.html"
     }).when("/user/:userName?", {
@@ -77,7 +79,7 @@ app.controller('SSADevHelpCtrl', function ($scope, $http, $q) {
     }
 });
 
-app.controller('NavController', function ($scope, $location, $http, $interval) {
+app.controller('NavController', function ($rootScope, $scope, $location, $http, $interval) {
     $scope.isActive = function (viewLocation) {
         return viewLocation === $location.path();
     };
@@ -86,23 +88,15 @@ app.controller('NavController', function ($scope, $location, $http, $interval) {
     $scope.newAnswerCount = 0;
 
     $http.get("/api/getUserInfo").then((res) => {
-        $scope.user = res.data;
-        socket.emit('initial', $scope.user.userName);
+        $rootScope.user = res.data;
+        socket.emit('initial', $rootScope.user.userName);
     });
 
     socket.on("new-answered-questions", function (questionList) {
-        //console.log(questionList);
         $scope.newAnswerCount = questionList.length;
         $scope.$root.newAnswers = questionList;
         $scope.$apply();
     });
-
-    $scope.go = function (modal, questionId) {
-        //$location.path("/view-question/" + questionId);
-        //$("#closeModal").trigger("click");
-        $scope.showModal = false;
-        // window.location = "/#/view-question/" + questionId;
-    }
 
     $scope.logout = function (){
         $http.post("/logout/").then(function (response){
@@ -123,11 +117,47 @@ app.controller('NavController', function ($scope, $location, $http, $interval) {
     }
 });
 
+app.controller("editController", function ($scope, $http, $routeParams, $location) {
+    var getUrl = null;
+    var collection = null;
+
+    if ($routeParams.questionOrAnswer === "question") {
+        $scope.hasTitle = true;
+        getUrl = "/api/getQuestion/" + $routeParams.id;
+        collection = "question";
+    } else {
+        getUrl = "/api/getAnswer/" + $routeParams.id;
+        collection = "answer";
+    }
+
+    $http.get(getUrl, { cache: false }).then(function (response) {
+        $scope.id = response.data._id;
+        if (response.data.title) {
+            $scope.title = response.data.title;
+        }
+        $scope.content = response.data.content;
+    });
+
+    $scope.submitUpdate = function () {
+        var updateParams = {};
+        updateParams.content = $scope.content;
+        
+        if ($scope.hasTitle) {
+            updateParams.title = $scope.title;
+        }
+
+        $http.post("/api/update", { id: $scope.id, collection: collection, update: updateParams }).then(function (response) {
+            $location.path("/view-question/" + response.data);
+        }, function (error) {
+            console.log(error);
+        });
+    }
+});
+
 app.controller('getQuestionsController', function ($scope, $http, $routeParams, $sce) 
 {
     $scope.$on('ngRepeatFinished', function(ngRepeatFinishedEvent) {
         $("#questions").owlCarousel({
-
             navigation: true, // Show next and prev buttons
             slideSpeed: 300,
             paginationSpeed: 400,
@@ -150,37 +180,22 @@ app.controller('getQuestionsController', function ($scope, $http, $routeParams, 
         url += userName;
     }
     $http.get(url, { cache: false }).then(function (response) {
-        // location = location.origin + "/";
-        //console.log($scope.userName);
         $scope.questions = response.data;
         for (var question of $scope.questions) {
             question.content = $sce.trustAsHtml(question.content);
         }
-        //console.log(response.data);
     });     
 });
 
 app.controller('getQuestionController', function ($scope, $http, $routeParams, $q, $rootScope, $sce)
 {
-
-
-
-    $http.get("/getSessionUser/").then(function (response) {
-        //alert("Get Session User is " + response.data);
+    /*$http.get("/getSessionUser/").then(function (response) {
         $rootScope.user =  response.data;
-        //alert("Inside Get Session $root scope user variable is set to " + $rootScope.user);
     }, function(err) {
         alert(err.data);
-    });
-    //alert("session user is "+$rootScope.user);
+    });*/
     
     var questionId = $routeParams.questionId;
-    //alert("question ID is " + questionId);
-
-    //$rootScope.user =  sessionUser;
-    //alert("Root Scope user is " + $rootScope.user);
-
-    //alert("In Get Question Controller Root Scope User is " + $rootScope.user);
 
     $scope.questionGet = $http.get("/api/getQuestion/" + questionId, { cache: false });
     $scope.answerGet  = $http.get("/api/getAnswersByQuestion/" + questionId, { cache: false });
@@ -204,8 +219,11 @@ app.controller('getQuestionController', function ($scope, $http, $routeParams, $
         var postAnswer = $http.post("/api/postAnswer/", answer);
         var updateQuestionLastAnsweredDate = $http.post("/api/updateQuestionLastAnsweredDate", {questionId: questionId, updatedKeyValue : { lastAnsweredDate: new Date() } });
 
-        $q.all([postAnswer, updateQuestionLastAnsweredDate]).then((success) => {
-            location.reload();
+        $q.all([postAnswer, updateQuestionLastAnsweredDate]).then((response) => {
+            var answer = response[0].data.ops[0];
+            answer.content = $sce.trustAsHtml(answer.content);
+            $scope.answers.push(answer);
+            $scope.answer = "";
         }, (error) => {
             alert(error.data);
         });
@@ -217,10 +235,6 @@ app.controller('getQuestionController', function ($scope, $http, $routeParams, $
             answerId: answerId
         };
         $http.post("/updateQuestion/", question).then(function (response) {
-            //$scope.$root.user = response.data;
-            //alert("Root current User is: " + response.data);
-            //$rootScope.user = response.data;
-            //window.location = "/#/view-question/"+questionId;
             location.reload(true);
         }, function(err) {
             alert(err.data)
@@ -233,10 +247,6 @@ app.controller('getQuestionController', function ($scope, $http, $routeParams, $
             answerId: null
         };
         $http.post("/updateQuestion/", question).then(function (response) {
-            //$scope.$root.user = response.data;
-            //alert("Root current User is: " + response.data);
-            //$rootScope.user = response.data;
-            //window.location = "/#/view-question/"+questionId;
             location.reload(true);
         }, function(err) {
             alert(err.data)
@@ -245,7 +255,7 @@ app.controller('getQuestionController', function ($scope, $http, $routeParams, $
 
 });
 
-app.controller('insertQuestionController', function ($scope, $http) 
+app.controller('insertQuestionController', function ($scope, $http, $location) 
 { 
     $scope.required = true;
     $scope.insertQuestion = function () {
@@ -254,7 +264,7 @@ app.controller('insertQuestionController', function ($scope, $http)
             content: $scope.content
         };
         $http.post("/insertQuestion/", question).then(function (response) {
-            window.location = "/#/";
+            $location.path("/view-question/" + response.data.insertedIds[0]);
         }, function (error) {
             console.log(error);
             alert(error.data.errmsg);
@@ -264,12 +274,8 @@ app.controller('insertQuestionController', function ($scope, $http)
 
 app.controller('viewAllQuestionsController', function ($scope, $http, $routeParams, $rootScope, $location, $sce)
 {
-    //var userName = $routeParams.userName;
-    //$rootScope.user = userName;
     $scope.letterLimit = 20;
-    $scope.go = function ( path ) {
-        $location.path( '/view-question/' + path );
-    };
+
     $http.get("/viewAllQuestions/", { cache: false }).then(function (response) {
        // $scope.questions = chunk(response.data, 3);
         $scope.questions = response.data;
@@ -319,5 +325,11 @@ app.directive('onFinishRender', function ($timeout) {
                 });
             }
         }
+    }
+});
+
+app.run(function ($rootScope, $location) {
+    $rootScope.goToPath = function (path) {
+        $location.path(path);
     }
 });

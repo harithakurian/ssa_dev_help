@@ -107,12 +107,12 @@ app.post("/api/postAnswer/", function (req, res) {
         dateTime: req.body.dateTime
     }
     
-    db.insertAnswer(answer, (err,result) => {
+    db.insertAnswer(answer, (err, result) => {
         if (err) {
             console.log("Answer not inserted", err);
             res.status(500).send(err.errmsg);
         } else {
-            res.send(result);
+            res.json(result);
         }
     })
 });
@@ -210,6 +210,21 @@ app.get('/api/getQuestion/:questionId', function (req, res) {
     });
 });
 
+app.get('/api/getAnswer/:id', function (req, res) {
+    var filter = {
+        _id: new mongo.ObjectId(req.params.id)
+    };
+    db.findAnswers(filter, function(err, result) {
+        if (err) {
+            res.status(500).send(err);
+        } else if (result.length === 0) {
+            res.status(500).send("no document is found");
+        } else {
+            res.json(result[0]);
+        }
+    });
+});
+
 app.get("/api/getAnswersByQuestion/:questionId", function (req, res) {
     var filter = {
         questionId: new mongo.ObjectId(req.params.questionId)
@@ -271,15 +286,39 @@ app.post('/insertQuestion/', function (req, res) {
         lastAnsweredDate: null
     };
 
-    console.dir(question);
-    db.insertQuestion(question, (err, success) => {
+    //console.dir(question);
+    db.insertQuestion(question, (err, doc) => {
         if (err) {
             res.status(500).send(err);
         } else {
-            res.send("success");
+            res.json(doc);
     }
     // @TODO
     });
+});
+
+app.post('/api/update', function (req, res) {
+    if (req.body.collection === "question") {
+        db.updateQuestion({_id: new mongo.ObjectId(req.body.id)}, req.body.update, 
+        function (err, isSuccess) {
+            if (err) {
+                res.status(500).send(err);
+            } else {
+                res.send(req.body.id);
+            }
+        });
+    } else if (req.body.collection === "answer") {
+        db.findAndUpdateAnswer({_id: new mongo.ObjectId(req.body.id)}, req.body.update, 
+        function (err, result) {
+            if (err) {
+                res.status(500).send(err);
+            } else {
+                res.send(result.value.questionId);
+            }
+        });
+    } else {
+        res.status(500).send("unknown collection");
+    }
 });
 
 app.post('/updateQuestion/', function (req, res) {
@@ -306,7 +345,7 @@ app.post("/api/updateQuestionLastAccessedDate", checkAuth, function (req, res) {
         if (err) {
             res.status(500).send(err);
         } else {
-            console.log("Update Question user Name is: " + req.session.currentUser.userName);
+            //console.log("Update Question user Name is: " + req.session.currentUser.userName);
             res.send(req.session.currentUser.userName);
         }
     });
@@ -318,7 +357,7 @@ app.post("/api/updateQuestionLastAnsweredDate", checkAuth, function (req, res) {
         if (err) {
             res.status(500).send(err);
         } else {
-            console.log("Update Question user Name is: " + req.session.currentUser.userName);
+            //console.log("Update Question user Name is: " + req.session.currentUser.userName);
             res.send(req.session.currentUser.userName);
         }
     });
@@ -381,7 +420,7 @@ io.on("connection", function (socket) {
     function monitor () {
         if (connectedUsers.numberOfUser && connectedUsers.numberOfUser > 0) {
             db.findQuestions({ $and: [ { userName : socket.userName }, { $where: "this.lastAccessedDate < this.lastAnsweredDate" } ] }, function (err, docs) {
-                if (docs) {
+                if (docs && connectedUsers[socket.userName]) {
                     var user = connectedUsers[socket.userName];
                     if (docs.length != user.lastNotifiedNumber) {
                         if (user.lastNotifiedNumber === 0 && docs.length === 0) {
