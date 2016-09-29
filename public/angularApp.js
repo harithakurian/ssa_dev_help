@@ -98,6 +98,10 @@ app.controller('NavController', function ($rootScope, $scope, $location, $http, 
         $scope.$apply();
     });
 
+    socket.on("new-question", function (question) {
+        console.log(question);
+    });
+
     $scope.logout = function (){
         $http.post("/logout/").then(function (response){
             window.location = "/";
