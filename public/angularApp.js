@@ -136,6 +136,14 @@ app.controller('getQuestionsController', function ($scope, $http, $routeParams, 
         });
     })
 
+    $scope.tinymceOptions ={
+        baseUrl: '/static/js/tinymce',
+        toolbar: 'undo redo | bold italic | alignleft aligncenter alignright | code',
+        plugins: "textcolor colorpicker",
+        skin: 'lightgray',
+        theme : 'modern'
+};
+
     var userName = $routeParams.userName;
     var url = "/getQuestions/";
     if (userName) {
