@@ -13,7 +13,7 @@ describe('SSA DEV HELP DB tests', function () {
 
     before(function(done) {
         this.timeout(10000);
-        MongoClient.connect("mongodb://10.140.4.76:27017/ssa-dev-help-db", function (err, database) {
+        MongoClient.connect("mongodb://10.140.4.76:80/ssa-dev-help-db", function (err, database) {
             if (err) {
                 //done(err);
             }
