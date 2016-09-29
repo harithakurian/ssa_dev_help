@@ -129,7 +129,7 @@ module.exports = function (db) {
     }
 
     this.updateQuestion = function (filter, update, callback) {
-        console.log(update);
+        //console.log(update);
         questionsCollection.updateOne(filter, { $set: update }, function (err, results) {
             if (err) {
                 callback(err, false);
@@ -149,8 +149,30 @@ module.exports = function (db) {
         });
     }
 
+    this.findAndUpdateAnswer = function (filter, update, callback) {
+        //console.log(update);
+        answersCollection.findOneAndUpdate(filter, { $set: update }, { returnNewDocument: true }, function (err, result) {
+            if (err) {
+                callback(err, null);
+            } else {
+                callback(null, result);
+            }
+        });
+    }
+
+    this.updateAnswer = function (filter, update, callback) {
+        //console.log(update);
+        answersCollection.updateOne(filter, { $set: update }, function (err, result) {
+            if (err) {
+                callback(err, null);
+            } else {
+                callback(null, result);
+            }
+        });
+    }
+
     this.findQuestion = function (filter, callback) {
-        console.log(filter);
+        //console.log(filter);
         questionsCollection.findOne(filter, function (err, doc) {
             if (err) {
                 callback(err, null);
