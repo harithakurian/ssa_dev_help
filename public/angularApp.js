@@ -75,8 +75,14 @@ app.controller('SSADevHelpCtrl', function ($scope, $http, $q) {
         $http.post("/insertUser/", userObj).then(function (response) {
             window.location = "/#/";
         }, function (error) {
-            console.log(error);
-            alert(error.data.errmsg);
+            if(error.data.code === 11000)
+            {
+                $scope.errMsg = "User Already Registered";
+            }
+            else
+            {
+                $scope.errMsg = error.data.errmsg;
+            }  
         });
     }
 });
