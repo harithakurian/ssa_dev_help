@@ -18,8 +18,8 @@ app.config(function ($routeProvider) {
         templateUrl: "static/Templates/insertQuestion.html"
     }).when("/view-question/:questionId", {
         templateUrl: "static/Templates/view-question.html"
-    }).when("/edit-question/:questionId", {
-        templateUrl: "static/Templates/edit-question.html"
+    }).when("/edit/:questionOrAnswer/:id", {
+        templateUrl: "static/Templates/edit.html"
     }).when("/updated-questions", {
         templateUrl: "static/Templates/view-new-answered-questions.html"
     }).when("/user/:userName?", {
@@ -79,7 +79,7 @@ app.controller('SSADevHelpCtrl', function ($scope, $http, $q) {
     }
 });
 
-app.controller('NavController', function ($scope, $location, $http, $interval) {
+app.controller('NavController', function ($rootScope, $scope, $location, $http, $interval) {
     $scope.isActive = function (viewLocation) {
         return viewLocation === $location.path();
     };
@@ -88,8 +88,8 @@ app.controller('NavController', function ($scope, $location, $http, $interval) {
     $scope.newAnswerCount = 0;
 
     $http.get("/api/getUserInfo").then((res) => {
-        $scope.user = res.data;
-        socket.emit('initial', $scope.user.userName);
+        $rootScope.user = res.data;
+        socket.emit('initial', $rootScope.user.userName);
     });
 
     socket.on("new-answered-questions", function (questionList) {
@@ -112,6 +112,43 @@ app.controller('NavController', function ($scope, $location, $http, $interval) {
             window.location = "/#/SearchResults";
             $scope.$root.searchResults = response.data;
         }, function (error){
+            console.log(error);
+        });
+    }
+});
+
+app.controller("editController", function ($scope, $http, $routeParams, $location) {
+    var getUrl = null;
+    var collection = null;
+
+    if ($routeParams.questionOrAnswer === "question") {
+        $scope.hasTitle = true;
+        getUrl = "/api/getQuestion/" + $routeParams.id;
+        collection = "question";
+    } else {
+        getUrl = "/api/getAnswer/" + $routeParams.id;
+        collection = "answer";
+    }
+
+    $http.get(getUrl, { cache: false }).then(function (response) {
+        $scope.id = response.data._id;
+        if (response.data.title) {
+            $scope.title = response.data.title;
+        }
+        $scope.content = response.data.content;
+    });
+
+    $scope.submitUpdate = function () {
+        var updateParams = {};
+        updateParams.content = $scope.content;
+        
+        if ($scope.hasTitle) {
+            updateParams.title = $scope.title;
+        }
+
+        $http.post("/api/update", { id: $scope.id, collection: collection, update: updateParams }).then(function (response) {
+            $location.path("/view-question/" + response.data);
+        }, function (error) {
             console.log(error);
         });
     }
@@ -144,11 +181,11 @@ app.controller('getQuestionsController', function ($scope, $http, $routeParams, 
 
 app.controller('getQuestionController', function ($scope, $http, $routeParams, $q, $rootScope, $sce)
 {
-    $http.get("/getSessionUser/").then(function (response) {
+    /*$http.get("/getSessionUser/").then(function (response) {
         $rootScope.user =  response.data;
     }, function(err) {
         alert(err.data);
-    });
+    });*/
     
     var questionId = $routeParams.questionId;
 
@@ -178,6 +215,7 @@ app.controller('getQuestionController', function ($scope, $http, $routeParams, $
             var answer = response[0].data.ops[0];
             answer.content = $sce.trustAsHtml(answer.content);
             $scope.answers.push(answer);
+            $scope.answer = "";
         }, (error) => {
             alert(error.data);
         });

@@ -1,0 +1,11 @@
+<div class="form-group" style="width: 75%; margin: auto; margin-top: 10px;" ng-controller="editController">
+    <form>
+        <input ng-show="hasTitle" type="text" placeholder="Title" class="form-control" ng-required="required" id="title" ng-model="title" />
+        <label for="content">Content:</label>
+        <textarea  ui-tinymce="tinymceOptions" class="form-control" rows="10" id="content" ng-required="required" ng-model="content"></textarea>
+        <br/>
+        <center>
+            <button class="btn btn-primary btn-large" ng-click="submitUpdate()"><i class="glyphicon glyphicon-ok-sign"></i> Update</button>
+        </center>
+    </form>
+</div>

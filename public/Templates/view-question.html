@@ -2,18 +2,20 @@
     <div class="container">
         <div class="row">
             <div class="col-md-1"></div>
-                <div class="col-md-10 question">
-                    <div ng-if="question.bestAnswerId">
-                        <div class="alert alert-info fade in">
-                        <span class="glyphicon glyphicon-check" aria-hidden="true" ></span><b>This question has an accepted answer</b>
-                        </div>
+            <div class="col-md-10 question">
+                <div ng-if="question.bestAnswerId">
+                    <div class="alert alert-info fade in">
+                        <span class="glyphicon glyphicon-check" aria-hidden="true"></span><b>This question has an accepted answer</b>
+                    </div>
                 </div>
-                    <div><span class="bold">Title:</span>{{question.title}}</div>
-                    <div ><span class="bold">Question:</span> <div class="answerDiv" ng-bind-html="question.content"></div></div>
-                    <div><span class="bold">Date:</span> {{question.dateTime | date:'medium'}}</div>
-
-             </div>
-         </div>
+                <div><span class="bold">Title:</span>{{question.title}}</div>
+                <div><span class="bold">Question:</span>
+                    <div class="answerDiv" ng-bind-html="question.content"></div>
+                </div>
+                <div><span class="bold">Date:</span> {{question.dateTime | date:'medium'}}</div>
+                <div ng-if="question.userName === $root.user.userName" style="text-align: right; cursor: pointer;"><span class="glyphicon glyphicon-pencil" ng-click="$root.goToPath('/edit/question/' + question._id)">Edit</span></div>
+            </div>
+        </div>
     </div>
 <br>
     <div ng-if="question.bestAnswerId == answer._id"  ng-repeat="answer in answers">
@@ -29,6 +31,7 @@
             <span class="bold">Date:</span> {{answer.dateTime | date:'medium'}}
             <span class="bold">By:</span> {{answer.userName}}
         </div>
+        <div ng-if="answer.userName === $root.user.userName" style="text-align: right; cursor: pointer;"><span class="glyphicon glyphicon-pencil" ng-click="$root.goToPath('/edit/answer/' + answer._id)">Edit</span></div>
 
         <div ng-if="question.userName == user">
             <div class="button-center">
@@ -51,6 +54,7 @@
                         <span class="bold">Date:</span> {{answer.dateTime | date:'medium'}}
                         <span class="bold">By:</span> {{answer.userName}}
                     </div>
+                    <div ng-if="answer.userName === $root.user.userName" style="text-align: right; cursor: pointer;"><span class="glyphicon glyphicon-pencil" ng-click="$root.goToPath('/edit/answer/' + answer._id)">Edit</span></div>
 
                      <div ng-if="question.userName == user">
                          <div class="button-center">
