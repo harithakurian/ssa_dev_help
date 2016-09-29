@@ -291,7 +291,7 @@ app.post('/insertQuestion/', function (req, res) {
         if (err) {
             res.status(500).send(err);
         } else {
-            io.sockets.emit("new-question", doc[0]);
+            io.sockets.emit("new-question", doc.ops[0]);
             res.json(doc);
         }
     });

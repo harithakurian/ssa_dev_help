@@ -1,0 +1,12 @@
+<div class="col-md-5"> </div>
+<p><input type="text" ng-model="test" placeholder="Result Filter"></p>
+<div class="col-md-2"></div>
+<div class="col-md-10">
+    <div class="col-md-3 question" ng-repeat="question in $root.newQuestionList | filter : test" ng-click="$root.goToPath('/view-question/' + question._id)">
+        <div><span class="bold">Title:</span> <a href="/#/view-question/{{question._id}}">{{question.title | limitTo : letterLimit }}
+                        {{question.title.length > 20 ? '...' : ''}}</a></div>
+        <div><span class="bold">Date:</span> {{question.dateTime | date:'medium'}}</div>
+        <div><span class="bold">Asked by:</span> <a href="/#/user/{{question.userName}}">{{question.userName}}</a></div>
+
+    </div>
+</div>
