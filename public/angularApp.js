@@ -107,6 +107,7 @@ app.controller('NavController', function ($rootScope, $scope, $location, $http, 
             for (q of $rootScope.newQuestionList) {
                 if (q._id === question._id) {
                     dup = true;
+                    break;
                 }
             }
 
@@ -173,25 +174,24 @@ app.controller("editController", function ($scope, $http, $routeParams, $locatio
     }
 });
 
-app.controller('getQuestionsController', function ($scope, $http, $routeParams, $sce) 
-{
-    $scope.$on('ngRepeatFinished', function(ngRepeatFinishedEvent) {
+app.controller('getQuestionsController', function ($scope, $http, $routeParams, $sce) {
+    $scope.$on('ngRepeatFinished', function (ngRepeatFinishedEvent) {
         $("#questions").owlCarousel({
             navigation: true, // Show next and prev buttons
             slideSpeed: 300,
             paginationSpeed: 400,
             singleItem: true,
-            autoPlay:   true
+            autoPlay: true
         });
     })
 
-    $scope.tinymceOptions ={
+    $scope.tinymceOptions = {
         baseUrl: '/static/js/tinymce',
         toolbar: 'undo redo | bold italic | alignleft aligncenter alignright | code',
         plugins: "textcolor colorpicker",
         skin: 'lightgray',
-        theme : 'modern'
-};
+        theme: 'modern'
+    };
 
     var userName = $routeParams.userName;
     var url = "/getQuestions/";
@@ -203,7 +203,7 @@ app.controller('getQuestionsController', function ($scope, $http, $routeParams, 
         for (var question of $scope.questions) {
             question.content = $sce.trustAsHtml(question.content);
         }
-    });     
+    });
 });
 
 app.controller('getQuestionController', function ($scope, $http, $routeParams, $q, $rootScope, $sce)
@@ -215,6 +215,13 @@ app.controller('getQuestionController', function ($scope, $http, $routeParams, $
     });*/
     
     var questionId = $routeParams.questionId;
+
+    for (var i = 0; i < $rootScope.newQuestionList.length; i++) {
+        if ($rootScope.newQuestionList[i]._id === questionId) {
+            $rootScope.newQuestionList.splice(i, 1);
+            break;
+        }
+    }
 
     $scope.questionGet = $http.get("/api/getQuestion/" + questionId, { cache: false });
     $scope.answerGet  = $http.get("/api/getAnswersByQuestion/" + questionId, { cache: false });
