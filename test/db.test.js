@@ -20,8 +20,6 @@ describe('SSA DEV HELP DB tests', function () {
             }
             var dbUtil = require('../db');
             db = new dbUtil(database);
-            console.log(database);
-            //db.close();
             done();
         });
     });
