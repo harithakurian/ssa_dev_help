@@ -1,4 +1,3 @@
-cd /usr/src/ssa_dev_help
-npm install
 service mongodb start
+sleep 2
 nodejs server.js

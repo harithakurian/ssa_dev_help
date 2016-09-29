@@ -7,4 +7,4 @@ COPY . /usr/src/ssa_dev_help
 ADD start.sh /tmp/
 RUN chmod +x /tmp/start.sh
 EXPOSE 8080
-
+CMD /tmp/start.sh
