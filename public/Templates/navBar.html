@@ -29,6 +29,9 @@
     </ul>
     <ul class="nav navbar-right">
       <li>
+        <span ng-show="$root.newQuestionList.length > 0">
+          <a class="glyphicon glyphicon-question-sign" href="/#/new-questions/" title="There is {{$root.newQuestionList.length}} new question(s)!">{{$root.newQuestionList.length}}</a>
+        </span>
         <span ng-if="newAnswerCount > 0">
           <a class="glyphicon glyphicon-exclamation-sign" href="/#/updated-questions/" title="There is new answer(s) to {{newAnswerCount}} of your questions!">{{newAnswerCount}}</a>
         </span>

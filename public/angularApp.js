@@ -20,6 +20,8 @@ app.config(function ($routeProvider) {
         templateUrl: "static/Templates/view-question.html"
     }).when("/edit/:questionOrAnswer/:id", {
         templateUrl: "static/Templates/edit.html"
+    }).when("/new-questions", {
+        templateUrl: "static/Templates/view-new-questions.html"
     }).when("/updated-questions", {
         templateUrl: "static/Templates/view-new-answered-questions.html"
     }).when("/user/:userName?", {
@@ -99,7 +101,20 @@ app.controller('NavController', function ($rootScope, $scope, $location, $http, 
     });
 
     socket.on("new-question", function (question) {
-        console.log(question);
+        if (question.userName !== $rootScope.user.userName) {
+
+            var dup = false;
+            for (q of $rootScope.newQuestionList) {
+                if (q._id === question._id) {
+                    dup = true;
+                }
+            }
+
+            if (!dup) {
+                $rootScope.newQuestionList.push(question);
+                $rootScope.$apply();
+            }
+        }
     });
 
     $scope.logout = function (){
@@ -333,6 +348,9 @@ app.directive('onFinishRender', function ($timeout) {
 });
 
 app.run(function ($rootScope, $location) {
+    
+    $rootScope.newQuestionList = [];
+    
     $rootScope.goToPath = function (path) {
         $location.path(path);
     }
