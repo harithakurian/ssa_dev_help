@@ -13,7 +13,7 @@ describe('SSA DEV HELP DB tests', function () {
 
     before(function(done) {
         this.timeout(10000);
-        MongoClient.connect("mongodb://127.0.0.1:27017/ssa-dev-help-db", function (err, database) {
+        MongoClient.connect("mongodb://localhost:27017/ssa-dev-help-db", function (err, database) {
             if (err) {
                 //done(err);
             }
@@ -25,45 +25,25 @@ describe('SSA DEV HELP DB tests', function () {
         });
     });
 
-    it('test if we are able to insert a user', function(done) {
-        var user = {
-            userName: 'Ram-100',
-            password: 'ram100',
-            lastLoggedIn: new Date()
-        };
+    // it('test if we are able to insert a user', function(done) {
+    //     var user = {
+    //         userName: 'Ram-100',
+    //         password: 'ram100',
+    //         lastLoggedIn: new Date()
+    //     };
 
-        db.insertUser(user,function(err, result){ 
-        try{  
-            assert.equal(true, result);
-        }
-        catch(ex)
-        {
-            done(ex);
-            return;
-        }
-        done();
-        })
-    });
-
-        it('test if we are able to insert a user', function(done) {
-        var user = {
-            userName: 'Ram-100',
-            password: 'ram100',
-            lastLoggedIn: new Date()
-        };
-
-        db.insertUser(user,function(err, result){ 
-        try{  
-            assert.equal(true, result);
-        }
-        catch(ex)
-        {
-            done(ex);
-            return;
-        }
-        done();
-        })
-    });
+    //     db.insertUser(user,function(err, result){ 
+    //     try{  
+    //         assert.equal(true, result);
+    //     }
+    //     catch(ex)
+    //     {
+    //         done(ex);
+    //         return;
+    //     }
+    //     done();
+    //     })
+    // });
 
     it('test if the user is invalid', function(done) {
         var login = {
@@ -101,7 +81,27 @@ describe('SSA DEV HELP DB tests', function () {
             }
             done();
             })
-    });   
+    });  
+
+    //     it('test if we are able to insert a user', function(done) {
+    //     var user = {
+    //         userName: 'Ram-100',
+    //         password: 'ram100',
+    //         lastLoggedIn: new Date()
+    //     };
+
+    //     db.insertUser(user,function(err, result){ 
+    //     try{  
+    //         assert.equal(true, result);
+    //     }
+    //     catch(ex)
+    //     {
+    //         done(ex);
+    //         return;
+    //     }
+    //     done();
+    //     })
+    // }); 
 
     after(function(done) {
             db.close();

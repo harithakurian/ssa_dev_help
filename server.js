@@ -404,7 +404,7 @@ io.on("connection", function (socket) {
 var serverObj = http.listen(8080, function () {
     console.log('Listening on port 8080...');
 
-    MongoClient.connect("mongodb://127.0.0.1:27017/ssa-dev-help-db", function (err, database) {
+    MongoClient.connect("mongodb://localhost:27017/ssa-dev-help-db", function (err, database) {
     if (err) {
         throw err;
     }
