@@ -279,7 +279,7 @@ app.post('/insertQuestion/', function (req, res) {
     var question = {
         userName: req.session.currentUser.userName,
         title: req.body.title,
-        content:req.body.content,
+        content: req.body.content,
         dateTime: new Date(),
         bestAnswerId: null,
         lastAccessedDate: new Date(),
@@ -291,9 +291,9 @@ app.post('/insertQuestion/', function (req, res) {
         if (err) {
             res.status(500).send(err);
         } else {
+            io.sockets.emit("new-question", doc[0]);
             res.json(doc);
-    }
-    // @TODO
+        }
     });
 });
 

@@ -33,7 +33,7 @@
         </div>
         <div ng-if="answer.userName === $root.user.userName" style="text-align: right; cursor: pointer;"><span class="glyphicon glyphicon-pencil" ng-click="$root.goToPath('/edit/answer/' + answer._id)">Edit</span></div>
 
-        <div ng-if="question.userName == user">
+        <div ng-if="question.userName == $root.user.userName">
             <div class="button-center">
                 <button ng-click="deselectAnswer(question._id, answer._id)" class="btn btn-info btn-large ">
                 <i class="glyphicon glyphicon-thumbs-down"></i> Deselect Best Answer</button></div>
@@ -56,7 +56,7 @@
                     </div>
                     <div ng-if="answer.userName === $root.user.userName" style="text-align: right; cursor: pointer;"><span class="glyphicon glyphicon-pencil" ng-click="$root.goToPath('/edit/answer/' + answer._id)">Edit</span></div>
 
-                     <div ng-if="question.userName == user">
+                     <div ng-if="question.userName == $root.user.userName">
                          <div class="button-center">
                          <button ng-click="acceptAnswer(question._id, answer._id)" class="btn btn-primary btn-large">
                              <i class="glyphicon glyphicon-thumbs-up"></i> Best Answer</button></div>

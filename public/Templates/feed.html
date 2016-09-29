@@ -3,7 +3,7 @@
 <div ng-controller="getQuestionsController">
     <h3 class="h3_home wow fadeIn" data-wow-delay="0.4s"> My Questions</h3>
     <div id="questions" class="owl-carousel">
-    <div class="question" ng-repeat="question in questions"  on-finish-render="ngRepeatFinished" >
+    <div class="question" ng-repeat="question in questions"  on-finish-render="ngRepeatFinished" ng-click="$root.goToPath('/view-question/' + question._id)" >
             <div><span class="bold">Title:</span> <a href="/#/view-question/{{question._id}}">{{question.title}}</a></div>
             <div><span class="bold">Date:</span> {{question.dateTime| date:'medium'}}</div>
 
